@@ -108,17 +108,21 @@ footer{text-align:center;padding:30px;color:#789080}
 
 <script>
 // 1. PUT YOUR FIREBASE CONFIG HERE
+
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyA_yfTI9pz1SV-C73UpXDv6lEpi-lLHnGc",
+  authDomain: "cts-mod.firebaseapp.com",
+  projectId: "cts-mod",
+  storageBucket: "cts-mod.firebasestorage.app",
+  messagingSenderId: "414535567539",
+  appId: "1:414535567539:web:21724a89219d50cf8348c6"
 };
 
+firebase.initializeApp(firebaseConfig);
+
+
 // 2. YOUR WHATSAPP NUMBER WITH COUNTRY CODE
-const WHATSAPP = "91XXXXXXXXXX";
+const WHATSAPP = "918976034412";
 
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
