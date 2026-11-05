@@ -12,103 +12,55 @@
 
 <style>
 *{box-sizing:border-box}
-body{
- margin:0;background:#070b09;color:#f3fff6;
- font-family:Arial,sans-serif;
-}
+body{margin:0;background:#070c09;color:#f3fff6;font-family:Arial,sans-serif}
 button{cursor:pointer;border:0;font-weight:bold}
-header{
- position:sticky;top:0;z-index:10;
- background:#0d1711;border-bottom:1px solid #244b30;
- padding:13px 4%;display:flex;align-items:center;
- justify-content:space-between;gap:10px;
-}
-.logo{font-size:25px;font-weight:900;color:#32f477}
+header{position:sticky;top:0;z-index:20;background:#0d1711;border-bottom:1px solid #244b30;padding:13px 4%;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.logo{font-size:24px;font-weight:900;color:#35f477}
 .header-actions{display:flex;gap:7px;align-items:center}
-.btn{
- padding:10px 13px;border-radius:9px;
- background:#27e968;color:#061009;
-}
+.btn{padding:11px 14px;border-radius:9px;background:#27e968;color:#061009}
 .btn.dark{background:#203629;color:white}
 .btn.red{background:#a83232;color:white}
+.btn:disabled{opacity:.5;cursor:not-allowed}
 .container{max-width:1150px;margin:auto;padding:22px 4%}
-.hero{
- padding:28px 22px;border-radius:17px;
- background:linear-gradient(120deg,#12351e,#101b14);
- border:1px solid #285d36;
-}
+.hero{padding:30px 23px;border-radius:17px;background:linear-gradient(120deg,#12351e,#101b14);border:1px solid #285d36}
 .hero h1{font-size:30px;margin:0 0 10px}
 .green{color:#35f477}
 .hero p{color:#b6cbbd;line-height:1.5}
-.categories{
- display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
- gap:10px;margin:20px 0;
-}
-.cat{
- min-width:0;padding:17px 5px;text-align:center;
- background:#111c15;border:1px solid #294632;
- border-radius:12px;color:white;font-size:13px;
- cursor:pointer;
-}
-.cat.active{border:1px solid #35f477;background:#173021}
-.cat .emoji{font-size:23px;display:block;margin-bottom:7px}
-input,textarea,select{
- width:100%;padding:12px;margin:7px 0 12px;
- background:#101a14;border:1px solid #31543b;
- border-radius:9px;color:white;font-size:15px;
-}
-textarea{min-height:90px;resize:vertical}
-.grid{
- display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
- gap:15px;margin-top:15px;
-}
-.card{
- background:#111b15;border:1px solid #294632;
- border-radius:14px;overflow:hidden;
-}
+.categories{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:20px 0}
+.cat{padding:18px 5px;text-align:center;background:#111c15;border:1px solid #294632;border-radius:13px;color:white;font-size:14px;cursor:pointer}
+.cat.active{border-color:#35f477;background:#173021}
+.emoji{display:block;font-size:24px;margin-bottom:7px}
+input,textarea,select{width:100%;padding:12px;margin:7px 0 12px;background:#101a14;border:1px solid #31543b;border-radius:9px;color:white;font-size:15px}
+textarea{min-height:85px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px;margin-top:15px}
+.card{background:#111b15;border:1px solid #294632;border-radius:14px;overflow:hidden}
 .card img{width:100%;height:165px;object-fit:cover;background:#17251b}
 .info{padding:14px}
 .info h3{margin:5px 0 9px}
-.small{font-size:13px;color:#9fb5a5}
-.price{font-size:18px;color:#35f477;font-weight:bold;margin:13px 0}
+.small{font-size:13px;color:#9fb5a5;line-height:1.5}
+.price{font-size:17px;color:#35f477;font-weight:bold;margin:13px 0;line-height:1.6}
 .section-title{margin-top:25px}
 .hidden{display:none!important}
-.modal{
- position:fixed;inset:0;z-index:100;
- background:#000b;display:flex;align-items:center;
- justify-content:center;padding:15px;
-}
-.modal-box{
- width:100%;max-width:520px;max-height:88vh;
- overflow:auto;background:#101a14;
- border:1px solid #35a957;border-radius:17px;
- padding:20px;box-shadow:0 15px 60px #000;
-}
-.modal-head{
- display:flex;justify-content:space-between;
- align-items:center;gap:10px;
-}
-.close{
- background:#293b2e;color:white;
- padding:9px 13px;border-radius:8px;
-}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.admin-item{
- padding:13px;margin:10px 0;
- background:#17251b;border:1px solid #31543b;
- border-radius:10px;
-}
+.modal{position:fixed;inset:0;z-index:100;background:#000c;display:flex;align-items:center;justify-content:center;padding:13px}
+.modal-box{width:100%;max-width:560px;max-height:90vh;overflow:auto;background:#101a14;border:1px solid #35a957;border-radius:17px;padding:19px;box-shadow:0 15px 60px #000}
+.modal-head{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.close{background:#293b2e;color:white;padding:10px 14px;border-radius:8px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.item{padding:13px;margin:10px 0;background:#17251b;border:1px solid #31543b;border-radius:10px;overflow-wrap:anywhere}
+.item button{margin:5px 5px 0 0}
+.badge{display:inline-block;padding:5px 9px;border-radius:7px;background:#203629;color:#baffcb;font-size:12px}
 footer{text-align:center;color:#819889;padding:30px}
+hr{border-color:#294632;margin:20px 0}
 @media(max-width:600px){
- header{padding:11px 3%;flex-wrap:wrap}
- .logo{font-size:21px}
- .header-actions{gap:5px}
- .btn{padding:9px 10px;font-size:12px}
+ header{padding:11px 3%}
+ .logo{font-size:20px}
+ .header-actions{gap:4px}
+ .btn{padding:9px 9px;font-size:12px}
  .container{padding:17px 4%}
  .hero h1{font-size:25px}
  .cat{font-size:11px;padding:13px 3px}
- .cat .emoji{font-size:20px}
- .row{grid-template-columns:1fr 1fr;gap:7px}
+ .emoji{font-size:20px}
+ .row{grid-template-columns:1fr 1fr;gap:6px}
 }
 </style>
 </head>
@@ -126,7 +78,6 @@ footer{text-align:center;color:#819889;padding:30px}
 </header>
 
 <div class="container">
-
  <section class="hero">
   <h1>WELCOME TO <span class="green">CTS MOD</span></h1>
   <p>Explore tools, products and gaming resources.</p>
@@ -148,28 +99,24 @@ footer{text-align:center;color:#819889;padding:30px}
  <input id="search" placeholder="Search products..." oninput="renderProducts()">
  <h2 class="section-title" id="categoryTitle">Termux Commands</h2>
  <div class="grid" id="products"></div>
-
 </div>
 
 <footer>© 2026 CTS MOD. All rights reserved.</footer>
 
-<!-- CUSTOMER LOGIN / REGISTER -->
+<!-- CUSTOMER ACCOUNT -->
 <div class="modal hidden" id="authModal" onclick="outsideClose(event,'authModal')">
  <div class="modal-box">
   <div class="modal-head">
    <h2>CTS MOD Account</h2>
    <button class="close" onclick="closeModal('authModal')">✕</button>
   </div>
-
   <h3>Create Account</h3>
   <input id="regPhone" placeholder="Phone Number">
   <input id="regEmail" type="email" placeholder="Email Address">
   <input id="regPassword" type="password" placeholder="Create Password">
   <input id="regConfirm" type="password" placeholder="Confirm Password">
   <button class="btn" onclick="registerCustomer()">Create Account</button>
-
-  <hr style="border-color:#294632;margin:22px 0">
-
+  <hr>
   <h3>Login</h3>
   <input id="loginEmail" type="email" placeholder="Email Address">
   <input id="loginPassword" type="password" placeholder="Password">
@@ -179,20 +126,20 @@ footer{text-align:center;color:#819889;padding:30px}
  </div>
 </div>
 
-<!-- PROFILE POPUP -->
+<!-- PROFILE -->
 <div class="modal hidden" id="profileModal" onclick="outsideClose(event,'profileModal')">
  <div class="modal-box">
   <div class="modal-head">
    <h2>My Profile</h2>
    <button class="close" onclick="closeModal('profileModal')">✕</button>
   </div>
-  <div id="profileDetails"></div>
+  <div id="profileDetails">Loading...</div>
   <h3>Purchase History</h3>
   <div id="purchaseHistory">Loading...</div>
  </div>
 </div>
 
-<!-- ADMIN LOGIN POPUP -->
+<!-- ADMIN LOGIN -->
 <div class="modal hidden" id="adminLoginModal" onclick="outsideClose(event,'adminLoginModal')">
  <div class="modal-box">
   <div class="modal-head">
@@ -206,7 +153,7 @@ footer{text-align:center;color:#819889;padding:30px}
  </div>
 </div>
 
-<!-- ADMIN DASHBOARD POPUP -->
+<!-- ADMIN DASHBOARD -->
 <div class="modal hidden" id="adminModal" onclick="outsideClose(event,'adminModal')">
  <div class="modal-box">
   <div class="modal-head">
@@ -214,7 +161,8 @@ footer{text-align:center;color:#819889;padding:30px}
    <button class="close" onclick="closeModal('adminModal')">✕</button>
   </div>
 
-  <p class="small">Manage your uploaded products.</p>
+  <p class="small">Manage products and customer purchase requests.</p>
+
   <h3>Upload / Edit Product</h3>
   <input id="productId" type="hidden">
   <input id="pName" placeholder="Product Name">
@@ -231,19 +179,26 @@ footer{text-align:center;color:#819889;padding:30px}
 
   <h3>Pricing (₹)</h3>
   <div class="row">
-   <input id="pDay" type="number" placeholder="Day Price">
-   <input id="pWeek" type="number" placeholder="Week Price">
+   <input id="pDay" type="number" min="0" placeholder="Day Price">
+   <input id="pWeek" type="number" min="0" placeholder="Week Price">
   </div>
   <div class="row">
-   <input id="pMonth" type="number" placeholder="Month Price">
-   <input id="pCustom" type="number" placeholder="Custom Price">
+   <input id="pMonth" type="number" min="0" placeholder="Month Price">
+   <input id="pCustom" type="number" min="0" placeholder="Custom Price">
   </div>
 
   <button class="btn" onclick="saveProduct()">Save Product</button>
   <button class="btn dark" onclick="clearForm()">Clear Form</button>
 
+  <hr>
   <h3>Manage Products</h3>
   <div id="adminProducts"></div>
+
+  <hr>
+  <h3>Customer Purchase Requests</h3>
+  <p class="small">Verify payment yourself before activating any request.</p>
+  <button class="btn dark" onclick="loadPurchaseRequests()">Refresh Requests</button>
+  <div id="adminRequests">Press Refresh Requests.</div>
  </div>
 </div>
 
@@ -265,6 +220,7 @@ const storage=firebase.storage();
 const WHATSAPP="918976034412";
 
 let customer=null;
+let isCurrentAdmin=false;
 let allProducts=[];
 let currentCategory="termux";
 
@@ -293,9 +249,8 @@ function chooseCategory(category,element){
 }
 
 function guestMode(){
- customer=null;
+ if(auth.currentUser)auth.signOut();
  closeModal("authModal");
- document.getElementById("welcomeText").textContent="Browsing as Guest";
 }
 
 async function registerCustomer(){
@@ -324,6 +279,7 @@ async function registerCustomer(){
    phone,email,
    createdAt:firebase.firestore.FieldValue.serverTimestamp()
   });
+  msg.textContent="Account created successfully!";
   closeModal("authModal");
  }catch(e){msg.textContent=e.message;}
 }
@@ -341,19 +297,29 @@ async function loginCustomer(){
 
 async function customerLogout(){
  await auth.signOut();
- guestMode();
 }
 
-auth.onAuthStateChanged(user=>{
+auth.onAuthStateChanged(async user=>{
  customer=user;
- const loggedIn=!!user;
+ isCurrentAdmin=false;
 
+ const loggedIn=!!user;
  document.getElementById("accountButton").classList.toggle("hidden",loggedIn);
  document.getElementById("profileButton").classList.toggle("hidden",!loggedIn);
  document.getElementById("logoutButton").classList.toggle("hidden",!loggedIn);
 
  document.getElementById("welcomeText").textContent=
   user?"Welcome, "+user.email:"Browsing as Guest";
+
+ if(user){
+  try{
+   const adminDoc=await db.collection("admins").doc(user.uid).get();
+   isCurrentAdmin=adminDoc.exists && adminDoc.data().role==="admin";
+   if(isCurrentAdmin && !document.getElementById("adminModal").classList.contains("hidden")){
+    await loadAdminProducts();
+   }
+  }catch(e){console.error("Admin check:",e);}
+ }
 });
 
 async function openProfile(){
@@ -379,17 +345,42 @@ async function openProfile(){
 
   history.innerHTML="";
   if(purchases.empty){
-   history.textContent="No purchases yet.";
+   history.textContent="No purchase requests yet.";
    return;
   }
 
-  purchases.forEach(doc=>{
+  const docs=purchases.docs.sort((a,b)=>{
+   const x=a.data().createdAt?.toMillis?.()||0;
+   const y=b.data().createdAt?.toMillis?.()||0;
+   return y-x;
+  });
+
+  docs.forEach(doc=>{
    const p=doc.data();
    const item=document.createElement("div");
-   item.className="admin-item";
-   item.textContent=(p.product||"Product")+" | "+(p.plan||"Plan")+
-    " | ₹"+(p.amount||0)+" | "+(p.status||"Pending");
-   history.appendChild(item);
+   item.className="item";
+
+   let expiry="Not activated";
+   if(p.expiresAt){
+    const date=p.expiresAt.toDate();
+    expiry=date.toLocaleString();
+   }
+
+   let status=p.status||"Pending";
+   if(status==="Active" && p.expiresAt && p.expiresAt.toDate()<new Date()){
+    status="Expired";
+   }
+
+   item.innerHTML="";
+   const title=document.createElement("b");
+   title.textContent=p.product||"Product";
+   const info=document.createElement("p");
+   info.className="small";
+   info.textContent="Plan: "+(p.plan||"")+" | Paid: ₹"+(p.amount||0);
+   const state=document.createElement("p");
+   state.textContent="Status: "+status+" | Expiry: "+expiry;
+   item.append(title,info,state);
+   history.append(item);
   });
  }catch(e){
   history.textContent="Could not load profile: "+e.message;
@@ -400,30 +391,46 @@ async function adminLogin(){
  const msg=document.getElementById("adminMessage");
  try{
   const result=await auth.signInWithEmailAndPassword(
-   document.getElementById("adminEmail").value,
+   document.getElementById("adminEmail").value.trim(),
    document.getElementById("adminPassword").value
   );
 
-  const token=await result.user.getIdTokenResult(true);
-  if(token.claims.admin!==true){
+  const adminDoc=await db.collection("admins").doc(result.user.uid).get();
+
+  if(!adminDoc.exists || adminDoc.data().role!=="admin"){
    await auth.signOut();
    throw new Error("This account is not an authorized admin.");
   }
 
+  isCurrentAdmin=true;
   closeModal("adminLoginModal");
   openModal("adminModal");
-  loadAdminProducts();
+  await loadProducts();
+  await loadPurchaseRequests();
  }catch(e){msg.textContent=e.message;}
+}
+
+async function checkAdmin(){
+ const user=auth.currentUser;
+ if(!user)return false;
+
+ const doc=await db.collection("admins").doc(user.uid).get();
+ return doc.exists && doc.data().role==="admin";
 }
 
 async function loadProducts(){
  try{
-  const snap=await db.collection("products").orderBy("createdAt","desc").get();
+  const snap=await db.collection("products").get();
   allProducts=snap.docs.map(d=>({id:d.id,...d.data()}));
+  allProducts.sort((a,b)=>{
+   const x=a.createdAt?.toMillis?.()||0;
+   const y=b.createdAt?.toMillis?.()||0;
+   return y-x;
+  });
   renderProducts();
-  loadAdminProducts();
+  if(isCurrentAdmin)loadAdminProducts();
  }catch(e){
-  document.getElementById("products").textContent="Could not load products.";
+  document.getElementById("products").textContent="Could not load products: "+e.message;
   console.error(e);
  }
 }
@@ -503,13 +510,8 @@ async function contactWhatsApp(product){
  const plan=prompt("Choose plan: "+options.join(", "));
  if(!plan)return;
 
- const selected=plan.toLowerCase();
- const prices={
-  day:product.day,
-  week:product.week,
-  month:product.month,
-  custom:product.custom
- };
+ const selected=plan.trim().toLowerCase();
+ const prices={day:product.day,week:product.week,month:product.month,custom:product.custom};
  const amount=Number(prices[selected]);
 
  if(!amount||!options.map(x=>x.toLowerCase()).includes(selected)){
@@ -522,6 +524,7 @@ async function contactWhatsApp(product){
    uid:customer.uid,
    email:customer.email,
    product:product.name,
+   productId:product.id,
    plan:selected,
    amount,
    status:"Pending",
@@ -533,38 +536,33 @@ async function contactWhatsApp(product){
    "\nCustomer: "+customer.email+
    "\nPlease share payment instructions.";
 
-  window.open("https://wa.me/"+WHATSAPP+"?text="+encodeURIComponent(message),"_blank");
-  alert("Request created. Payment verification and admin approval are still required.");
+  window.location.href="https://wa.me/"+WHATSAPP+"?text="+encodeURIComponent(message);
  }catch(e){
   alert("Could not create request: "+e.message);
  }
 }
 
 async function saveProduct(){
- const user=auth.currentUser;
- if(!user)return alert("Admin login required.");
-
- const token=await user.getIdTokenResult(true);
- if(token.claims.admin!==true)return alert("Unauthorized.");
-
- const name=document.getElementById("pName").value.trim();
- if(!name)return alert("Enter product name.");
-
- const id=document.getElementById("productId").value;
- const file=document.getElementById("pImage").files[0];
-
- const data={
-  name,
-  description:document.getElementById("pDescription").value,
-  category:document.getElementById("pCategory").value,
-  day:Number(document.getElementById("pDay").value)||0,
-  week:Number(document.getElementById("pWeek").value)||0,
-  month:Number(document.getElementById("pMonth").value)||0,
-  custom:Number(document.getElementById("pCustom").value)||0,
-  updatedAt:firebase.firestore.FieldValue.serverTimestamp()
- };
-
  try{
+  if(!await checkAdmin())return alert("Admin login required.");
+
+  const name=document.getElementById("pName").value.trim();
+  if(!name)return alert("Enter product name.");
+
+  const id=document.getElementById("productId").value;
+  const file=document.getElementById("pImage").files[0];
+
+  const data={
+   name,
+   description:document.getElementById("pDescription").value,
+   category:document.getElementById("pCategory").value,
+   day:Number(document.getElementById("pDay").value)||0,
+   week:Number(document.getElementById("pWeek").value)||0,
+   month:Number(document.getElementById("pMonth").value)||0,
+   custom:Number(document.getElementById("pCustom").value)||0,
+   updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+  };
+
   if(file){
    if(file.size>5*1024*1024)throw new Error("Image must be under 5 MB.");
    if(!file.type.startsWith("image/"))throw new Error("Select an image file.");
@@ -598,7 +596,7 @@ function loadAdminProducts(){
 
  allProducts.forEach(p=>{
   const row=document.createElement("div");
-  row.className="admin-item";
+  row.className="item";
 
   const name=document.createElement("b");
   name.textContent=p.name+" — "+(categoryNames[p.category]||p.category);
@@ -611,7 +609,6 @@ function loadAdminProducts(){
   const del=document.createElement("button");
   del.className="btn red";
   del.textContent="Delete";
-  del.style.marginLeft="7px";
   del.onclick=()=>deleteProduct(p.id);
 
   row.append(name,document.createElement("br"),edit,del);
@@ -634,8 +631,106 @@ function editProduct(p){
 async function deleteProduct(id){
  if(!confirm("Delete this product?"))return;
  try{
+  if(!await checkAdmin())return alert("Unauthorized.");
   await db.collection("products").doc(id).delete();
   await loadProducts();
+ }catch(e){alert(e.message);}
+}
+
+// ADMIN PURCHASE REQUESTS
+async function loadPurchaseRequests(){
+ const box=document.getElementById("adminRequests");
+ box.textContent="Loading requests...";
+
+ try{
+  if(!await checkAdmin())throw new Error("Admin access required.");
+
+  const snap=await db.collection("purchaseRequests").get();
+  box.innerHTML="";
+
+  if(snap.empty){
+   box.textContent="No purchase requests yet.";
+   return;
+  }
+
+  const docs=snap.docs.sort((a,b)=>{
+   const x=a.data().createdAt?.toMillis?.()||0;
+   const y=b.data().createdAt?.toMillis?.()||0;
+   return y-x;
+  });
+
+  docs.forEach(doc=>{
+   const p=doc.data();
+   const row=document.createElement("div");
+   row.className="item";
+
+   const title=document.createElement("b");
+   title.textContent=p.product||"Product";
+
+   const info=document.createElement("p");
+   info.className="small";
+   info.textContent=(p.email||"")+" | "+(p.plan||"")+" | ₹"+(p.amount||0);
+
+   const status=document.createElement("p");
+   status.textContent="Status: "+(p.status||"Pending");
+
+   const activate=document.createElement("button");
+   activate.className="btn";
+   activate.textContent="Activate";
+   activate.onclick=()=>activateRequest(doc.id);
+
+   const deactivate=document.createElement("button");
+   deactivate.className="btn red";
+   deactivate.textContent="Deactivate";
+   deactivate.onclick=()=>deactivateRequest(doc.id);
+
+   row.append(title,info,status,activate,deactivate);
+   box.append(row);
+  });
+ }catch(e){box.textContent=e.message;}
+}
+
+async function activateRequest(id){
+ const days=prompt("Enter access duration in days (1, 7, 30 or custom):","1");
+ if(!days)return;
+
+ const number=Number(days);
+ if(!Number.isInteger(number)||number<1||number>365){
+  alert("Enter a number from 1 to 365.");
+  return;
+ }
+
+ if(!confirm("Confirm payment has been checked and activate for "+number+" days?"))return;
+
+ try{
+  if(!await checkAdmin())throw new Error("Unauthorized.");
+
+  const expiry=new Date(Date.now()+number*24*60*60*1000);
+
+  await db.collection("purchaseRequests").doc(id).update({
+   status:"Active",
+   durationDays:number,
+   activatedAt:firebase.firestore.FieldValue.serverTimestamp(),
+   expiresAt:firebase.firestore.Timestamp.fromDate(expiry)
+  });
+
+  alert("Access activated.");
+  await loadPurchaseRequests();
+ }catch(e){alert(e.message);}
+}
+
+async function deactivateRequest(id){
+ if(!confirm("Deactivate this purchase?"))return;
+
+ try{
+  if(!await checkAdmin())throw new Error("Unauthorized.");
+
+  await db.collection("purchaseRequests").doc(id).update({
+   status:"Deactivated",
+   deactivatedAt:firebase.firestore.FieldValue.serverTimestamp()
+  });
+
+  await loadPurchaseRequests();
  }catch(e){alert(e.message);}
 }
 
