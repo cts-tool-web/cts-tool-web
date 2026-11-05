@@ -371,6 +371,177 @@ async function deleteProduct(id){
     await loadProducts();
   }catch(e){alert(e.message);}
 }
+let customer = null;
+let guest = true;
+
+function showAuth(){
+  document.getElementById("authBox").classList.remove("hidden");
+}
+function hideAuth(){
+  document.getElementById("authBox").classList.add("hidden");
+}
+function guestMode(){
+  guest = true;
+  customer = null;
+  document.getElementById("welcomeText").textContent =
+    "Browsing as Guest. Login required to purchase.";
+  hideAuth();
+}
+
+async function registerCustomer(){
+  const phone = document.getElementById("regPhone").value.trim();
+  const email = document.getElementById("regEmail").value.trim();
+  const pass = document.getElementById("regPassword").value;
+  const confirm = document.getElementById("regConfirm").value;
+  const msg = document.getElementById("authMessage");
+
+  if(!phone || !email || !pass || !confirm){
+    msg.textContent = "Please fill all fields.";
+    return;
+  }
+  if(pass !== confirm){
+    msg.textContent = "Passwords do not match.";
+    return;
+  }
+  if(pass.length < 6){
+    msg.textContent = "Password must be at least 6 characters.";
+    return;
+  }
+
+  try{
+    const result = await auth.createUserWithEmailAndPassword(email,pass);
+    await db.collection("customers").doc(result.user.uid).set({
+      phone: phone,
+      email: email,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    msg.textContent = "Account created successfully!";
+    hideAuth();
+  }catch(e){
+    msg.textContent = e.message;
+  }
+}
+
+async function loginCustomer(){
+  const email = document.getElementById("loginEmail").value.trim();
+  const pass = document.getElementById("loginPassword").value;
+  const msg = document.getElementById("authMessage");
+
+  try{
+    await auth.signInWithEmailAndPassword(email,pass);
+    msg.textContent = "Login successful!";
+    hideAuth();
+  }catch(e){
+    msg.textContent = e.message;
+  }
+}
+
+async function logoutCustomer(){
+  await auth.signOut();
+  guestMode();
+}
+
+auth.onAuthStateChanged(async user=>{
+  customer = user;
+  guest = !user;
+
+  document.getElementById("profileBtn").classList.toggle("hidden",!user);
+  document.getElementById("logoutBtn").classList.toggle("hidden",!user);
+
+  if(user){
+    document.getElementById("welcomeText").textContent =
+      "Welcome, " + user.email;
+  }else{
+    document.getElementById("welcomeText").textContent =
+      "Browsing as Guest";
+  }
+});
+
+async function showProfile(){
+  if(!customer){showAuth();return;}
+
+  document.getElementById("profileBox").classList.remove("hidden");
+  const details=document.getElementById("profileDetails");
+  const history=document.getElementById("purchaseHistory");
+
+  try{
+    const profile=await db.collection("customers").doc(customer.uid).get();
+    const data=profile.data()||{};
+
+    details.textContent =
+      "Email: "+customer.email+" | Phone: "+(data.phone||"Not added");
+
+    const purchases=await db.collection("purchaseRequests")
+      .where("uid","==",customer.uid).get();
+
+    history.innerHTML="";
+    if(purchases.empty){
+      history.textContent="No purchases yet.";
+      return;
+    }
+
+    purchases.forEach(doc=>{
+      const p=doc.data();
+      const item=document.createElement("p");
+      item.textContent=
+        (p.product||"Product")+" | "+(p.plan||"Plan")+
+        " | ₹"+(p.amount||0)+" | "+(p.status||"Pending");
+      history.appendChild(item);
+    });
+  }catch(e){
+    history.textContent="Could not load profile.";
+  }
+}
+
+function hideProfile(){
+  document.getElementById("profileBox").classList.add("hidden");
+}
+
+// Replace the old contactWhatsApp function with this one.
+async function contactWhatsApp(name){
+  if(!customer){
+    alert("Please login or create an account before purchasing.");
+    showAuth();
+    return;
+  }
+
+  const plan=prompt("Enter plan: Day, Week, or Month");
+  if(!plan)return;
+
+  const product=allProducts.find(p=>p.name===name);
+  if(!product)return;
+
+  const selected=plan.toLowerCase();
+  const prices={day:product.day,week:product.week,month:product.month};
+  const amount=Number(prices[selected]);
+
+  if(!amount || !["day","week","month"].includes(selected)){
+    alert("Invalid plan or price.");
+    return;
+  }
+
+  try{
+    await db.collection("purchaseRequests").add({
+      uid:customer.uid,
+      email:customer.email,
+      product:name,
+      plan:selected,
+      amount:amount,
+      status:"Pending",
+      createdAt:firebase.firestore.FieldValue.serverTimestamp()
+    });
+
+    const message="CTS MOD Purchase Request\nProduct: "+name+
+      "\nPlan: "+selected+"\nPrice: ₹"+amount+
+      "\nCustomer: "+customer.email+
+      "\nPlease share payment instructions.";
+    window.open("https://wa.me/"+WHATSAPP+
+      "?text="+encodeURIComponent(message),"_blank");
+    alert("Request sent. Admin approval is required after payment verification.");
+  }catch(e){
+    alert("Could not create request: "+e.message);
+  }
+}
 
 loadProducts();
 </script>
