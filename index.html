@@ -39,6 +39,47 @@ footer{text-align:center;padding:30px;color:#789080}
 <body>
 
 <header>
+  
+<div id="authArea" style="padding:15px;text-align:center">
+  <button onclick="showAuth()">Login / Register</button>
+  <button onclick="guestMode()" style="background:#34483a;color:white">
+    Continue as Guest
+  </button>
+  <button id="profileBtn" class="hidden" onclick="showProfile()">
+    My Profile
+  </button>
+  <button id="logoutBtn" class="hidden" onclick="logoutCustomer()">
+    Logout
+  </button>
+  <p id="welcomeText" class="small"></p>
+</div>
+
+<div id="authBox" class="panel hidden" style="margin:15px">
+  <h2>CTS MOD Account</h2>
+  <h3>Create Account</h3>
+  <input id="regPhone" placeholder="Phone Number">
+  <input id="regEmail" type="email" placeholder="Email Address">
+  <input id="regPassword" type="password" placeholder="Create Password">
+  <input id="regConfirm" type="password" placeholder="Confirm Password">
+  <button onclick="registerCustomer()">Create Account</button>
+
+  <hr>
+  <h3>Login</h3>
+  <input id="loginEmail" type="email" placeholder="Email Address">
+  <input id="loginPassword" type="password" placeholder="Password">
+  <button onclick="loginCustomer()">Login</button>
+  <button onclick="hideAuth()" style="background:#34483a;color:white">Close</button>
+  <p id="authMessage" class="small"></p>
+</div>
+
+<div id="profileBox" class="panel hidden" style="margin:15px">
+  <h2>My Profile</h2>
+  <p id="profileDetails"></p>
+  <h3>My Purchase History</h3>
+  <div id="purchaseHistory">Loading...</div>
+  <button onclick="hideProfile()" style="background:#34483a;color:white">Close</button>
+</div>
+
   <div class="logo">CTS MOD</div>
   <button onclick="showLogin()">Admin Login</button>
 </header>
