@@ -1,0 +1,333 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CTS MOD</title>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-storage-compat.js"></script>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#080d0b;color:#f4fff7;font-family:Arial,sans-serif}
+header{padding:22px 5%;display:flex;justify-content:space-between;align-items:center;background:#101a14;border-bottom:1px solid #24442e}
+.logo{font-size:25px;font-weight:900;color:#38ff75}
+button{background:#24e65e;color:#061008;border:0;padding:11px 17px;border-radius:8px;font-weight:bold;cursor:pointer}
+input,textarea,select{width:100%;padding:12px;margin:7px 0 13px;background:#111b15;border:1px solid #31543b;border-radius:8px;color:white}
+.container{padding:25px 5%;max-width:1200px;margin:auto}
+.hero{padding:35px 22px;background:linear-gradient(120deg,#102b19,#101713);border:1px solid #285d36;border-radius:16px}
+.hero h1{font-size:34px;margin:0 0 10px}
+.green{color:#38ff75}
+.categories{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:25px 0}
+.cat{padding:20px 10px;text-align:center;background:#111b15;border:1px solid #284a32;border-radius:12px;cursor:pointer}
+.cat.active{border:1px solid #38ff75;background:#14251a}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.card{background:#111a14;border:1px solid #263e2d;border-radius:13px;overflow:hidden}
+.card img{width:100%;height:155px;object-fit:cover;background:#17221a}
+.info{padding:15px}
+.price{color:#38ff75;font-size:20px;font-weight:bold;margin:12px 0}
+.small{color:#9cb5a2;font-size:13px}
+.panel{background:#101a14;padding:20px;border:1px solid #31543b;border-radius:12px;margin:20px 0}
+.hidden{display:none!important}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+footer{text-align:center;padding:30px;color:#789080}
+@media(max-width:600px){.categories{grid-template-columns:1fr}.hero h1{font-size:27px}.row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">CTS MOD</div>
+  <button onclick="showLogin()">Admin Login</button>
+</header>
+
+<div class="container">
+  <section class="hero">
+    <h1>WELCOME TO <span class="green">CTS MOD</span></h1>
+    <p>Explore tools, products and gaming resources.</p>
+  </section>
+
+  <div class="categories">
+    <div class="cat active" onclick="chooseCategory('termux',this)">⌨️<br>Termux Commands</div>
+    <div class="cat" onclick="chooseCategory('products',this)">📦<br>My Products</div>
+    <div class="cat" onclick="chooseCategory('freefire',this)">🎮<br>Free Fire Resources</div>
+  </div>
+
+  <input id="search" placeholder="Search products..." oninput="renderProducts()">
+  <h2 id="categoryTitle">Termux Commands</h2>
+  <div class="grid" id="products"></div>
+
+  <!-- ADMIN LOGIN -->
+  <section id="loginBox" class="panel hidden">
+    <h2>Admin Login</h2>
+    <input id="email" type="email" placeholder="Admin email">
+    <input id="password" type="password" placeholder="Password">
+    <button onclick="login()">Login</button>
+    <button onclick="hideLogin()" style="background:#34483a;color:white">Close</button>
+    <p id="loginMessage" class="small"></p>
+  </section>
+
+  <!-- ADMIN DASHBOARD -->
+  <section id="adminBox" class="panel hidden">
+    <h2 class="green">CTS MOD ADMIN PANEL</h2>
+    <p class="small">Manage website products and prices.</p>
+    <button onclick="logout()" style="background:#34483a;color:white">Logout</button>
+
+    <h3>Upload / Edit Product</h3>
+    <input id="productId" type="hidden">
+    <input id="pName" placeholder="Product name">
+    <textarea id="pDescription" placeholder="Product description"></textarea>
+    <select id="pCategory">
+      <option value="termux">Termux Commands</option>
+      <option value="products">My Products</option>
+      <option value="freefire">Free Fire Resources</option>
+    </select>
+    <label>Product image</label>
+    <input id="pImage" type="file" accept="image/*">
+
+    <h3>Pricing (₹)</h3>
+    <div class="row">
+      <input id="pDay" type="number" placeholder="Day price">
+      <input id="pWeek" type="number" placeholder="Week price">
+    </div>
+    <div class="row">
+      <input id="pMonth" type="number" placeholder="Month price">
+      <input id="pCustom" type="number" placeholder="Custom price (optional)">
+    </div>
+    <button onclick="saveProduct()">Save Product</button>
+    <button onclick="clearForm()" style="background:#34483a;color:white">Clear Form</button>
+
+    <h3>Manage Uploaded Products</h3>
+    <div id="adminProducts"></div>
+  </section>
+</div>
+
+<footer>© 2026 CTS MOD. All rights reserved.</footer>
+
+<script>
+// 1. PUT YOUR FIREBASE CONFIG HERE
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  projectId: "YOUR_PROJECT_ID",
+  storageBucket: "YOUR_PROJECT.appspot.com",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId: "YOUR_APP_ID"
+};
+
+// 2. YOUR WHATSAPP NUMBER WITH COUNTRY CODE
+const WHATSAPP = "91XXXXXXXXXX";
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+const storage = firebase.storage();
+
+let currentCategory = "termux";
+let allProducts = [];
+
+const categoryNames = {
+  termux:"Termux Commands",
+  products:"My Products",
+  freefire:"Free Fire Resources"
+};
+
+function showLogin(){
+  document.getElementById("loginBox").classList.remove("hidden");
+}
+function hideLogin(){
+  document.getElementById("loginBox").classList.add("hidden");
+}
+
+async function login(){
+  const msg=document.getElementById("loginMessage");
+  try{
+    const result=await auth.signInWithEmailAndPassword(
+      document.getElementById("email").value,
+      document.getElementById("password").value
+    );
+    const token=await result.user.getIdTokenResult(true);
+    if(token.claims.admin!==true){
+      await auth.signOut();
+      throw new Error("This account is not an authorized admin.");
+    }
+    msg.textContent="Login successful.";
+  }catch(e){msg.textContent=e.message;}
+}
+
+async function logout(){await auth.signOut();}
+
+auth.onAuthStateChanged(async user=>{
+  document.getElementById("adminBox").classList.add("hidden");
+  if(!user)return;
+  try{
+    const token=await user.getIdTokenResult(true);
+    if(token.claims.admin===true){
+      document.getElementById("adminBox").classList.remove("hidden");
+      loadAdminProducts();
+    }
+  }catch(e){console.error(e);}
+});
+
+function chooseCategory(category,element){
+  currentCategory=category;
+  document.querySelectorAll(".cat").forEach(x=>x.classList.remove("active"));
+  element.classList.add("active");
+  document.getElementById("categoryTitle").textContent=categoryNames[category];
+  renderProducts();
+}
+
+async function loadProducts(){
+  try{
+    const snap=await db.collection("products").orderBy("createdAt","desc").get();
+    allProducts=snap.docs.map(d=>({id:d.id,...d.data()}));
+    renderProducts();
+    loadAdminProducts();
+  }catch(e){console.error(e);}
+}
+
+function renderProducts(){
+  const box=document.getElementById("products");
+  const search=document.getElementById("search").value.toLowerCase();
+  const items=allProducts.filter(p=>
+    p.category===currentCategory &&
+    (p.name||"").toLowerCase().includes(search)
+  );
+  box.innerHTML="";
+  if(!items.length){
+    box.innerHTML='<p class="small">No products uploaded in this category yet.</p>';
+    return;
+  }
+  items.forEach(p=>{
+    const prices=[];
+    if(Number(p.day)>0)prices.push("Day ₹"+p.day);
+    if(Number(p.week)>0)prices.push("Week ₹"+p.week);
+    if(Number(p.month)>0)prices.push("Month ₹"+p.month);
+    if(Number(p.custom)>0)prices.push("Custom ₹"+p.custom);
+
+    const card=document.createElement("div");
+    card.className="card";
+    const img=document.createElement("img");
+    img.src=p.image||"";
+    img.alt=p.name||"Product";
+    const info=document.createElement("div");
+    info.className="info";
+    const title=document.createElement("h3");
+    title.textContent=p.name||"Untitled";
+    const desc=document.createElement("p");
+    desc.className="small";
+    desc.textContent=p.description||"";
+    const price=document.createElement("div");
+    price.className="price";
+    price.textContent=prices.join(" | ")||"Contact for price";
+    const buy=document.createElement("button");
+    buy.textContent="Contact / Purchase";
+    buy.onclick=()=>contactWhatsApp(p.name);
+    info.append(title,desc,price,buy);
+    card.append(img,info);
+    box.append(card);
+  });
+}
+
+function contactWhatsApp(name){
+  const message="Hello, I am interested in "+name+" from CTS MOD.";
+  window.open("https://wa.me/"+WHATSAPP+"?text="+encodeURIComponent(message),"_blank");
+}
+
+async function saveProduct(){
+  const user=auth.currentUser;
+  if(!user)return alert("Admin login required.");
+
+  const token=await user.getIdTokenResult(true);
+  if(token.claims.admin!==true)return alert("Unauthorized.");
+
+  const name=document.getElementById("pName").value.trim();
+  if(!name)return alert("Enter product name.");
+
+  const id=document.getElementById("productId").value;
+  const file=document.getElementById("pImage").files[0];
+  const data={
+    name,
+    description:document.getElementById("pDescription").value,
+    category:document.getElementById("pCategory").value,
+    day:Number(document.getElementById("pDay").value)||0,
+    week:Number(document.getElementById("pWeek").value)||0,
+    month:Number(document.getElementById("pMonth").value)||0,
+    custom:Number(document.getElementById("pCustom").value)||0,
+    updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+  };
+
+  try{
+    let imageUrl="";
+    if(file){
+      const ref=storage.ref("product-images/"+Date.now()+"_"+file.name);
+      await ref.put(file);
+      imageUrl=await ref.getDownloadURL();
+    }
+    if(imageUrl)data.image=imageUrl;
+
+    if(id){
+      await db.collection("products").doc(id).update(data);
+    }else{
+      data.createdAt=firebase.firestore.FieldValue.serverTimestamp();
+      await db.collection("products").add(data);
+    }
+    alert("Product saved!");
+    clearForm();
+    await loadProducts();
+  }catch(e){alert(e.message);}
+}
+
+function clearForm(){
+  ["productId","pName","pDescription","pDay","pWeek","pMonth","pCustom","pImage"]
+    .forEach(id=>document.getElementById(id).value="");
+}
+
+function loadAdminProducts(){
+  const box=document.getElementById("adminProducts");
+  box.innerHTML="";
+  allProducts.forEach(p=>{
+    const row=document.createElement("div");
+    row.className="panel";
+    const name=document.createElement("b");
+    name.textContent=p.name+" — "+(categoryNames[p.category]||p.category);
+    const edit=document.createElement("button");
+    edit.textContent="Edit";
+    edit.onclick=()=>editProduct(p);
+    const del=document.createElement("button");
+    del.textContent="Delete";
+    del.style.marginLeft="8px";
+    del.style.background="#a83232";
+    del.style.color="white";
+    del.onclick=()=>deleteProduct(p.id);
+    row.append(name,document.createElement("br"),edit,del);
+    box.append(row);
+  });
+}
+
+function editProduct(p){
+  document.getElementById("productId").value=p.id;
+  document.getElementById("pName").value=p.name||"";
+  document.getElementById("pDescription").value=p.description||"";
+  document.getElementById("pCategory").value=p.category||"products";
+  document.getElementById("pDay").value=p.day||"";
+  document.getElementById("pWeek").value=p.week||"";
+  document.getElementById("pMonth").value=p.month||"";
+  document.getElementById("pCustom").value=p.custom||"";
+  window.scrollTo({top:document.getElementById("adminBox").offsetTop,behavior:"smooth"});
+}
+
+async function deleteProduct(id){
+  if(!confirm("Delete this product?"))return;
+  try{
+    await db.collection("products").doc(id).delete();
+    await loadProducts();
+  }catch(e){alert(e.message);}
+}
+
+loadProducts();
+</script>
+</body>
+</html>
