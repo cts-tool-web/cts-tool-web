@@ -1,545 +1,106 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>CTS TOOL | CYBER TECHEY STROM</title>
-<meta name="theme-color" content="#07100b">
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-storage-compat.js"></script>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#07100b"><title>CTS TOOL — Digital Studio</title>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-storage-compat.js"></script>
 <style>
-:root{--bg:#070d09;--card:#101b13;--green:#62ff91;--line:#294632;--muted:#9aafa0}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#f3fff5;font:14px Arial}
-button,input,textarea,select{font:inherit}button{cursor:pointer}
-header{height:68px;position:sticky;top:0;z-index:10;background:#08110bf2;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 4%;gap:10px}
-.logo{font-size:21px;font-weight:900}.logo span{color:var(--green)}.logo small{display:block;font-size:8px;letter-spacing:3px;color:var(--muted)}
-nav{display:flex;gap:4px;flex-wrap:wrap}nav button,.outline{background:transparent;color:#c5d5c8;border:1px solid transparent;padding:9px;border-radius:7px;font-size:12px}nav button:hover,nav button.active{color:var(--green);background:#193322}
-main{max-width:1300px;margin:auto;padding:25px 5% 60px}.page{display:none}.page.active{display:block}
-h1{font-size:clamp(38px,6vw,72px);letter-spacing:-3px;line-height:1;margin:18px 0}
-h2{font-size:27px}h3{font-size:16px}.green{color:var(--green)}.muted{color:var(--muted);line-height:1.7}
-.eyebrow{font-size:10px;letter-spacing:3px;color:var(--green);font-weight:bold}
-.btn{background:var(--green);color:#07100b;border:0;padding:12px 16px;border-radius:8px;font-weight:bold}
-.outline{border-color:var(--line);color:var(--green);padding:11px 14px}
-.hero{display:grid;grid-template-columns:1fr 1fr;gap:25px;align-items:center;padding:55px 0}
-.heroart{height:340px;border:1px solid #34543b;border-radius:18px;background:radial-gradient(circle,#285333,#0a140d 70%);display:grid;place-items:center;position:relative;overflow:hidden}
-.heroart strong{font-size:90px;color:#c3ffd1;text-shadow:0 0 40px var(--green);letter-spacing:-8px}
-.float{position:absolute;background:#09140d;border:1px solid #456b4c;border-radius:9px;padding:12px;font-size:11px;color:var(--green)}
-.f1{top:12%;left:5%}.f2{right:5%;top:48%}.f3{bottom:8%;left:20%}
-.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:20px}
-.ticker{padding:17px 0;border-block:1px solid var(--line);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:var(--muted);font-size:10px;letter-spacing:2px}
-.quick,.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin:20px 0}
-.quick div,.card,.panel{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
-.quick div{padding:17px;cursor:pointer}.quick div:hover,.card:hover{border-color:var(--green)}
-.quick b{display:block;margin:9px 0}.quick span{color:var(--green);font-size:23px}
-.section{display:flex;justify-content:space-between;align-items:center;margin:40px 0 12px}
-.cover{height:160px;background:linear-gradient(140deg,#1a3823,#0c160f);display:grid;place-items:center;color:var(--green);font-size:40px;overflow:hidden}
-.cover img{width:100%;height:100%;object-fit:cover}
-.body{padding:14px}.body p{color:var(--muted);font-size:12px;min-height:35px}
-.tag{display:inline-block;color:var(--green);background:#183523;border:1px solid #31583b;border-radius:20px;padding:5px 9px;font-size:10px}
-.price{color:var(--green);font-weight:bold;font-size:17px;margin:12px 0}
-.mini{background:#17281b;color:var(--green);border:1px solid #3c5c42;padding:8px 11px;border-radius:7px;font-size:11px}
-.toolbar{display:flex;gap:9px;margin:20px 0;flex-wrap:wrap}
-input,textarea,select{width:100%;padding:12px;background:#09130c;color:white;border:1px solid #35503b;border-radius:8px;margin:7px 0 12px}
-.toolbar input{flex:2;min-width:180px}.toolbar select{flex:1;min-width:130px}
-textarea{min-height:90px}label{display:block;color:#b9cbbd;font-size:12px;margin-top:8px}
-.panel{padding:18px;margin:12px 0}.banner{padding:23px;border:1px solid #456849;border-radius:13px;background:linear-gradient(110deg,#1a3b25,#0e1911);margin:25px 0;display:flex;justify-content:space-between;align-items:center;gap:15px}
-.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}.item{padding:12px;background:#17271b;border:1px solid var(--line);border-radius:9px;margin:8px 0;overflow-wrap:anywhere}
-.tiny{font-size:11px;color:var(--muted)}.hidden{display:none!important}
-.modal{position:fixed;inset:0;background:#000d;z-index:50;display:grid;place-items:center;padding:14px}
-.modalbox{width:min(550px,100%);max-height:90vh;overflow:auto;background:var(--card);border:1px solid #54805a;border-radius:14px;padding:20px}
-.modalhead{display:flex;justify-content:space-between;align-items:center}
-.close{background:#293d2e;color:white;border:0;padding:9px;border-radius:7px}
-.status{background:#061009;color:var(--green);padding:12px;border-radius:8px;overflow-wrap:anywhere}
-footer{border-top:1px solid var(--line);padding:30px 5%;color:var(--muted);display:flex;justify-content:space-between;flex-wrap:wrap;font-size:11px}
-@media(max-width:850px){nav{display:none;position:absolute;top:67px;left:0;right:0;background:#08110b;padding:12px;flex-wrap:wrap}nav.open{display:flex}nav button{flex:1 0 22%}.hero{grid-template-columns:1fr}.heroart{height:270px}.quick{grid-template-columns:1fr 1fr}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:500px){header{padding:0 3%}.logo{font-size:17px}main{padding:20px 4%}.hero{padding:30px 0}.heroart{height:230px}.heroart strong{font-size:65px}.grid{gap:8px}.cover{height:115px}.body{padding:10px}.body h3{font-size:13px}.body p{font-size:10px}.two{grid-template-columns:1fr}.banner{align-items:flex-start;flex-direction:column}}
+:root{--bg:#070d09;--s:#101b13;--s2:#17271b;--line:#2a4531;--g:#62ff91;--txt:#f3fff5;--muted:#9aafa0}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font:14px Arial,sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer}a{color:inherit;text-decoration:none}header{height:68px;position:sticky;top:0;z-index:20;background:#08110bed;backdrop-filter:blur(14px);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 5vw;gap:12px}.logo{font-size:21px;font-weight:900;letter-spacing:-1px}.logo i{color:var(--g);font-style:normal}.logo small{display:block;font-size:8px;letter-spacing:3px;color:var(--muted)}nav{display:flex;gap:3px;flex-wrap:wrap}nav button,.pill{border:0;background:transparent;color:#b9c9bd;padding:9px 10px;border-radius:8px;font-size:12px}nav button.active,nav button:hover{background:#183322;color:var(--g)}.pill{border:1px solid var(--line);color:var(--g)}.solid{background:var(--g);color:#07100b;font-weight:bold}.menu{display:none}main{max-width:1400px;margin:auto;padding:0 5vw 60px}.page{display:none}.page.active{display:block}.eyebrow{font-size:10px;letter-spacing:3px;color:var(--g);font-weight:bold}.muted{color:var(--muted);line-height:1.65}h1{font-size:clamp(38px,6vw,76px);line-height:.98;letter-spacing:-3px;margin:17px 0}h2{font-size:27px;letter-spacing:-1px}h3{font-size:16px}.green{color:var(--g)}.hero{display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:center;padding:55px 0 35px}.hero p{max-width:470px;font-size:15px}.heroArt{height:370px;position:relative;border:1px solid #36543c;border-radius:18px;overflow:hidden;background:radial-gradient(circle at center,#21452b,#0b150e 68%)}.heroArt:before{content:"";position:absolute;width:75%;aspect-ratio:1;border:1px dashed #6aff9180;border-radius:50%;left:12%;top:12%;box-shadow:0 0 0 30px #62ff910a,0 0 0 65px #62ff9108}.mark{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:80px;font-weight:1000;letter-spacing:-8px;color:#b7ffca;text-shadow:0 0 45px #62ff91}.float{position:absolute;background:#09140df0;border:1px solid #496b50;padding:13px;border-radius:10px;width:160px}.float b{display:block;color:var(--g);font-size:11px}.float small{color:var(--muted)}.f1{top:10%;left:6%}.f2{right:5%;top:42%}.f3{bottom:8%;left:19%;width:185px}.cta,.btn{border:0;border-radius:8px;padding:12px 16px;background:var(--g);color:#07100b;font-weight:bold;display:inline-block}.ghost,.mini{background:#17281b;color:var(--g);border:1px solid #3c5c42}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}.ticker{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;border-block:1px solid var(--line);padding:15px 0;color:#8da393;font-size:10px;letter-spacing:2px}.quick{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:20px 0}.quick div{background:linear-gradient(140deg,#14251a,#0b130d);border:1px solid var(--line);border-radius:11px;padding:17px;cursor:pointer}.quick b{display:block;margin:7px 0}.quick span{color:var(--g);font-size:20px}.section{display:flex;align-items:end;justify-content:space-between;margin:42px 0 15px}.section h2{margin:5px 0 0}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:14px}.card{background:var(--s);border:1px solid var(--line);border-radius:13px;overflow:hidden}.cover{height:165px;background:linear-gradient(140deg,#1a3823,#0c160f);display:grid;place-items:center;color:var(--g);font-size:40px;overflow:hidden}.cover img{width:100%;height:100%;object-fit:cover}.body{padding:14px}.body p{color:var(--muted);font-size:12px;min-height:34px}.tag{display:inline-block;color:var(--g);background:#183523;border:1px solid #31583b;border-radius:20px;padding:4px 8px;font-size:9px}.price{color:var(--g);font-weight:900;font-size:17px;margin:12px 0}.mini{padding:8px 11px;border-radius:7px;font-size:11px}.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0}.toolbar input{flex:2;min-width:180px}.toolbar select{flex:1;min-width:130px}input,select,textarea{width:100%;padding:12px;background:#09130c;color:white;border:1px solid #35503b;border-radius:8px;margin:6px 0 12px}textarea{min-height:85px}label{display:block;color:#b9cbbd;font-size:12px;margin-top:8px}.panel{background:var(--s);border:1px solid var(--line);border-radius:12px;padding:18px;margin:13px 0}.banner{padding:22px;border:1px solid #456849;border-radius:13px;background:linear-gradient(110deg,#1a3b25,#0e1911);display:flex;align-items:center;justify-content:space-between;gap:14px;margin:25px 0}.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}.tiny{font-size:11px;color:var(--muted)}.item{padding:12px;background:var(--s2);border:1px solid var(--line);border-radius:9px;margin:8px 0;overflow-wrap:anywhere}.item button{margin:5px}.modal{position:fixed;inset:0;background:#000c;z-index:100;display:grid;place-items:center;padding:14px}.modal.hidden,.hidden{display:none!important}.modalBox{width:min(560px,100%);max-height:90vh;overflow:auto;background:var(--s);border:1px solid #54805a;border-radius:14px;padding:19px}.modalHead{display:flex;justify-content:space-between;align-items:center}.close{background:#293d2e;color:white;border:0;padding:9px 12px;border-radius:7px}.status,.terminal{background:#061009;color:var(--g);padding:12px;border-radius:8px;overflow-wrap:anywhere}.terminal{white-space:pre-wrap;min-height:100px}footer{border-top:1px solid var(--line);padding:30px 5vw;color:var(--muted);display:flex;justify-content:space-between;flex-wrap:wrap;font-size:11px}
+@media(max-width:900px){nav{display:none;position:absolute;top:67px;left:0;right:0;background:#08110b;padding:12px;border-bottom:1px solid var(--line)}nav.open{display:flex}nav button{flex:1 0 22%}.menu{display:inline-block}.hero{grid-template-columns:1fr}.heroArt{height:300px}}
+@media(max-width:560px){header{padding:0 4%;height:62px}.logo{font-size:18px}.pill:not(.solid):not(.menu){display:none}main{padding:0 4% 40px}.hero{padding-top:38px;gap:20px}h1{letter-spacing:-2px}.heroArt{height:250px}.mark{font-size:62px}.quick{grid-template-columns:1fr 1fr;gap:7px}.quick div{padding:12px}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.cover{height:115px}.body{padding:10px}.body h3{font-size:13px}.body p{font-size:10px}.mini{padding:7px;font-size:10px}.two{grid-template-columns:1fr}.banner{align-items:flex-start;flex-direction:column}.section{margin-top:32px}}
 </style>
-</head>
-<body>
-
-<header>
-<a class="logo" onclick="go('home')">CTS<span>.</span>TOOL<small>CYBER TECHEY STROM</small></a>
-<nav id="nav">
-<button class="active" data-page="home">Home</button>
-<button data-page="store">Store</button>
-<button data-page="websites">Web Store</button>
-<button data-page="apps">Apps</button>
-<button data-page="creator">Creator</button>
-<button data-page="tools">Tools</button>
-<button data-page="videos">Videos</button>
-<button data-page="community">Community</button>
-</nav>
-<div>
-<button class="outline" onclick="go('profile')">Account</button>
-<button class="btn" id="loginTop" onclick="openModal('authModal')">Login</button>
-<button class="outline hidden" id="logoutTop" onclick="logout()">Logout</button>
-<button class="outline" onclick="document.getElementById('nav').classList.toggle('open')">☰</button>
-</div>
-</header>
-
-<main>
-
-<section class="page active" id="home">
-<div class="hero">
-<div>
-<div class="eyebrow">THE DIGITAL CREATOR MARKETPLACE</div>
-<h1>Build your<br>next <span class="green">big thing.</span></h1>
-<p class="muted">Discover digital products, order a custom website and find creator resources — all in one digital studio.</p>
-<div class="actions">
-<button class="btn" onclick="go('websites')">Explore websites ↗</button>
-<button class="outline" onclick="go('store')">Visit store</button>
-</div>
-<p class="tiny" id="welcomeText">Browsing as guest</p>
-</div>
-<div class="heroart">
-<strong>CTS</strong>
-<div class="float f1">01 / WEB STUDIO</div>
-<div class="float f2">02 / DIGITAL STORE</div>
-<div class="float f3">03 / CREATOR SPACE</div>
-</div>
-</div>
-<div class="ticker"><span>DESIGN • DEVELOP • CREATE</span><span>POWERED BY CYBER TECHEY STROM</span><span>YOUR DIGITAL SPACE</span></div>
-<div class="quick">
-<div onclick="go('websites')"><span>↗</span><b>Website Studio</b><small class="tiny">Choose a design & order</small></div>
-<div onclick="go('store')"><span>▧</span><b>Digital Store</b><small class="tiny">Explore products</small></div>
-<div onclick="go('creator')"><span>✳</span><b>Creator Resources</b><small class="tiny">Assets & editing</small></div>
-<div onclick="go('tools')"><span>⌘</span><b>Free Tools</b><small class="tiny">Browser utilities</small></div>
-</div>
-<div class="section"><h2>Featured drops</h2><button class="mini" onclick="go('store')">View all ↗</button></div>
-<div class="grid" id="featured"></div>
-<div class="section"><h2>Website designs</h2><button class="mini" onclick="go('websites')">Explore ↗</button></div>
-<div class="grid" id="homeWeb"></div>
-<div class="banner"><div><h2>Let's make it real.</h2><p class="muted">Tell us what you want to build.</p></div><button class="btn" onclick="customOrder()">Start a project ↗</button></div>
-<div class="section"><h2>Latest updates</h2></div><div id="announcements"></div>
-</section>
-
-<section class="page" id="store">
-<div class="eyebrow">DIGITAL MARKETPLACE</div><h1>The Store<span class="green">.</span></h1>
-<p class="muted">Browse software, creator resources and digital products.</p>
-<div class="toolbar">
-<input id="storeSearch" placeholder="Search products..." oninput="renderCatalog('store')">
-<select id="storeCategory" onchange="renderCatalog('store')">
-<option value="">All categories</option><option>Apps & Software</option><option>Creator Tools</option><option>Digital Products</option><option>Termux Commands</option><option>My Products</option><option>Free Fire Resources</option>
-</select>
-<select id="storeSort" onchange="renderCatalog('store')"><option value="new">Newest</option><option value="low">Price low-high</option><option value="high">Price high-low</option></select>
-</div>
-<div class="grid" id="storeGrid"></div>
-</section>
-
-<section class="page" id="websites">
-<div class="eyebrow">CTS WEB STUDIO / 01</div>
-<h1>Websites that<br><span class="green">work for you.</span></h1>
-<p class="muted">Choose a design, view previews and send your order directly to CTS on WhatsApp.</p>
-<div class="banner"><div><b>Need something unique?</b><p class="muted">Request a custom website quote.</p></div><button class="btn" onclick="customOrder()">Custom website ↗</button></div>
-<div class="toolbar">
-<input id="webSearch" placeholder="Search website designs..." oninput="renderCatalog('websites')">
-<select id="webType" onchange="renderCatalog('websites')"><option value="">All types</option><option>Business</option><option>Portfolio</option><option>E-commerce</option><option>Restaurant</option><option>Education</option><option>Landing Page</option><option>Blog</option><option>Other</option></select>
-<select id="webSort" onchange="renderCatalog('websites')"><option value="new">Newest</option><option value="low">Price low-high</option><option value="high">Price high-low</option></select>
-</div>
-<div class="grid" id="webGrid"></div>
-<p class="tiny">Preview images are design references. Final features, delivery and pricing are confirmed on WhatsApp.</p>
-</section>
-
-<section class="page" id="apps">
-<div class="eyebrow">SOFTWARE COLLECTION</div><h1>Apps & <span class="green">Software.</span></h1>
-<div class="grid" id="appsGrid"></div>
-</section>
-
-<section class="page" id="creator">
-<div class="eyebrow">FOR THE MAKERS</div><h1>Creator <span class="green">space.</span></h1>
-<p class="muted">Resources for editors, designers and video creators.</p>
-<div class="grid" id="creatorGrid"></div>
-<div class="panel"><h2>Creator links</h2>
-<a class="mini" href="https://www.canva.com/" target="_blank">Canva ↗</a>
-<a class="mini" href="https://www.photopea.com/" target="_blank">Photopea ↗</a>
-<a class="mini" href="https://www.capcut.com/" target="_blank">CapCut ↗</a>
-</div>
-</section>
-
-<section class="page" id="tools">
-<div class="eyebrow">SMALL UTILITIES / BIG HELP</div><h1>Tools <span class="green">lab.</span></h1>
-<div class="two">
-<div class="panel"><h3>Text studio</h3><textarea id="textTool" oninput="countText()" placeholder="Write text..."></textarea><p class="tiny" id="textCount">0 words · 0 characters</p><button class="mini" onclick="convertText('upper')">UPPERCASE</button> <button class="mini" onclick="convertText('lower')">lowercase</button> <button class="mini" onclick="convertText('title')">Title Case</button> <button class="mini" onclick="copyVal('textTool')">Copy</button></div>
-<div class="panel"><h3>Password generator</h3><input id="passLength" type="number" min="8" max="40" value="16"><button class="mini" onclick="genPass()">Generate</button><input id="passOut" readonly><button class="mini" onclick="copyVal('passOut')">Copy</button></div>
-<div class="panel"><h3>Demo terminal</h3><p class="tiny">Safe simulation; no real device commands run.</p><input id="cmd" placeholder="help, date, whoami, clear"><button class="mini" onclick="runCmd()">Run</button><pre class="status" id="termOut">CTS demo terminal. Type help.</pre></div>
-<div class="panel"><h3>Cyber safety quiz</h3><p>Which password habit is safest?</p><select id="quiz"><option value="">Choose</option><option value="yes">Long, unique password</option><option>Use 123456 everywhere</option><option>Share with friends</option></select><button class="mini" onclick="checkQuiz()">Check</button><p id="quizResult" class="tiny"></p></div>
-</div>
-</section>
-
-<section class="page" id="videos">
-<div class="eyebrow">WATCH & LEARN</div><h1>CTS <span class="green">videos.</span></h1>
-<div class="grid" id="videoGrid"></div>
-<a class="btn" href="https://www.youtube.com/" target="_blank">Open YouTube ↗</a>
-</section>
-
-<section class="page" id="community">
-<div class="eyebrow">STAY CONNECTED</div><h1>The CTS <span class="green">community.</span></h1>
-<div class="grid">
-<div class="panel"><h2>Telegram</h2><p class="muted">Join the CTS channel for updates.</p><a class="btn" href="https://t.me/cybertecheystrom" target="_blank">Join channel ↗</a></div>
-<div class="panel"><h2>Support</h2><p class="muted">Questions about products or website orders.</p><a class="btn" href="https://wa.me/918976034412" target="_blank">WhatsApp ↗</a></div>
-<div class="panel"><h2>YouTube</h2><p class="muted">CYBER TECHEY STROM.</p><a class="btn" href="https://www.youtube.com/" target="_blank">Visit channel ↗</a></div>
-</div>
-</section>
-
-<section class="page" id="profile">
-<div class="eyebrow">YOUR SPACE</div><h1>My <span class="green">account.</span></h1>
-<div id="profileGuest" class="panel"><p class="muted">Login to see your purchase history.</p><button class="btn" onclick="openModal('authModal')">Login / Register</button></div>
-<div id="profileArea" class="hidden">
-<div class="panel"><p id="profileDetails"></p><button class="mini" onclick="logout()">Logout</button></div>
-<h2>Purchase history</h2><div id="purchaseHistory"></div>
-<h2>Wishlist</h2><div class="grid" id="wishlistGrid"></div>
-</div>
-</section>
-
-<section class="page" id="admin">
-<div class="eyebrow">CONTROL ROOM</div><h1>CTS <span class="green">admin.</span></h1>
-<div id="adminGate" class="panel">Admin login required.</div>
-<div id="adminArea" class="hidden">
-<h2>Add / Edit Product</h2>
-<div class="panel">
-<input id="productId" type="hidden">
-<label>Name</label><input id="pName">
-<label>Description</label><textarea id="pDescription"></textarea>
-<label>Category</label><select id="pCategory"><option>Apps & Software</option><option>Creator Tools</option><option>Digital Products</option><option>Websites</option><option>Termux Commands</option><option>My Products</option><option>Free Fire Resources</option></select>
-<label>Website type</label><select id="pWebsiteType"><option>Business</option><option>Portfolio</option><option>E-commerce</option><option>Restaurant</option><option>Education</option><option>Landing Page</option><option>Blog</option><option>Other</option></select>
-<label>Price ₹</label><input id="pPrice" type="number" min="0">
-<label>Image URL</label><input id="pImageUrl" placeholder="https://...">
-<label>Upload preview image</label><input id="pImageFile" type="file" accept="image/*">
-<label>Extra preview image URLs (comma separated)</label><textarea id="pGallery"></textarea>
-<label>External download URL</label><input id="pDownload">
-<label>APK file (optional)</label><input id="pApk" type="file" accept=".apk">
-<label>Featured?</label><select id="pFeatured"><option value="false">No</option><option value="true">Yes</option></select>
-<p id="uploadStatus" class="status">Ready.</p>
-<button class="btn" id="saveBtn" onclick="saveProduct()">Save product</button> <button class="mini" onclick="clearForm()">Clear</button>
-</div>
-<h2>Manage products</h2><div id="adminProducts"></div>
-<h2>Purchase requests</h2><button class="mini" onclick="loadRequests()">Refresh</button><div id="adminRequests"></div>
-<h2>Announcements</h2><div class="panel"><input id="aTitle" placeholder="Title"><textarea id="aText" placeholder="Message"></textarea><button class="mini" onclick="addAnnouncement()">Publish</button></div><div id="adminAnnouncements"></div>
-<h2>Manage videos</h2><div class="panel"><input id="vTitle" placeholder="Video title"><input id="vUrl" placeholder="YouTube URL"><button class="mini" onclick="addVideo()">Add video</button></div><div id="adminVideos"></div>
-</div>
-</section>
-</main>
-
-<footer><b>CTS TOOL · Powered by CYBER TECHEY STROM</b><span>Digital products · Website studio · Creator tools</span><span>© 2026 CTS TOOL</span><button class="mini" onclick="openModal('adminLoginModal')">Admin</button></footer>
-
-<div class="modal hidden" id="authModal">
-<div class="modalbox"><div class="modalhead"><h2>CTS Account</h2><button class="close" onclick="closeModal('authModal')">✕</button></div>
-<h3>Create Account</h3>
-<input id="regPhone" placeholder="Phone Number">
-<input id="regEmail" type="email" placeholder="Email Address">
-<input id="regPassword" type="password" placeholder="Create Password">
-<input id="regConfirm" type="password" placeholder="Confirm Password">
-<button class="btn" onclick="registerCustomer()">Create Account</button>
-<hr><h3>Login</h3>
-<input id="loginEmail" type="email" placeholder="Email Address">
-<input id="loginPassword" type="password" placeholder="Password">
-<button class="btn" onclick="loginCustomer()">Login</button>
-<button class="mini" onclick="guestMode()">Continue as Guest</button>
-<p id="authMessage" class="tiny"></p>
-</div></div>
-
-<div class="modal hidden" id="detailModal">
-<div class="modalbox"><div class="modalhead"><h2 id="detailTitle">Details</h2><button class="close" onclick="closeModal('detailModal')">✕</button></div><div id="detailBody"></div></div></div>
-
-<div class="modal hidden" id="adminLoginModal">
-<div class="modalbox"><div class="modalhead"><h2>Admin login</h2><button class="close" onclick="closeModal('adminLoginModal')">✕</button></div>
-<input id="adminEmail" type="email" placeholder="Admin Email">
-<input id="adminPassword" type="password" placeholder="Admin Password">
-<button class="btn" onclick="adminLogin()">Login to Admin</button><p id="adminMessage" class="tiny"></p>
-</div></div>
-
+<style id="cts-cinematic-upgrade">
+/* CTS CINEMATIC MOTION SYSTEM */
+:root{--g:#73ff9b;--glow:0 0 24px #62ff9160}
+html{scroll-behavior:smooth}body{overflow-x:hidden;background:radial-gradient(ellipse at 50% -20%,#183b25 0%,#070d09 48%);}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;opacity:.16;background-image:linear-gradient(#6bff9010 1px,transparent 1px),linear-gradient(90deg,#6bff9010 1px,transparent 1px);background-size:48px 48px;mask-image:linear-gradient(to bottom,black,transparent 85%);animation:gridDrift 22s linear infinite}
+@keyframes gridDrift{to{background-position:48px 48px}}
+.logo{position:relative;text-shadow:0 0 18px #62ff9140;animation:logoPulse 3s ease-in-out infinite}.logo i{display:inline-block;animation:dotPulse 1.5s infinite}
+@keyframes logoPulse{50%{text-shadow:0 0 24px #62ff91a0}}@keyframes dotPulse{50%{transform:scale(1.5);text-shadow:0 0 16px var(--g)}}
+.hero{min-height:570px;position:relative}.hero>div:first-child{animation:riseIn .9s both}.hero h1{background:linear-gradient(100deg,#fff 10%,#9bffb6 45%,#43d978 65%,#fff 90%);background-size:220% auto;color:transparent;background-clip:text;-webkit-background-clip:text;animation:shineText 6s linear infinite}
+@keyframes shineText{to{background-position:220% center}}@keyframes riseIn{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+.heroArt{isolation:isolate;background:radial-gradient(circle at 50% 48%,#28623a 0,#102819 28%,#07100b 72%);box-shadow:inset 0 0 80px #62ff9120,0 25px 80px #0008;animation:artFloat 7s ease-in-out infinite}
+@keyframes artFloat{50%{transform:translateY(-8px)}}.heroArt:after{content:"";position:absolute;inset:-60%;z-index:-1;background:conic-gradient(from 0deg,transparent,#62ff911c,transparent 25%,#62ff911c,transparent 55%);animation:orbitSpin 18s linear infinite}
+@keyframes orbitSpin{to{transform:rotate(360deg)}}.heroArt:before{animation:orbitPulse 4s ease-in-out infinite,orbitSpin 35s linear infinite;border-color:#75ff9b90;box-shadow:0 0 35px #62ff9130,0 0 0 35px #62ff910c,0 0 0 75px #62ff9108}
+@keyframes orbitPulse{50%{scale:1.08;opacity:.55}}.mark{font-size:clamp(78px,12vw,130px);letter-spacing:-12px;color:#d9ffe2;text-shadow:0 0 15px #62ff91,0 0 45px #62ff91,0 0 100px #62ff9170;animation:markBeat 3s ease-in-out infinite;z-index:2}
+@keyframes markBeat{50%{transform:translate(-50%,-50%) scale(1.06);filter:brightness(1.3)}}.float{backdrop-filter:blur(12px);box-shadow:0 12px 35px #0008;animation:floatCard 5s ease-in-out infinite}.f2{animation-delay:-1.7s}.f3{animation-delay:-3.2s}@keyframes floatCard{50%{transform:translateY(-12px) rotate(1deg)}}
+.ticker{overflow:hidden;position:relative}.ticker span{white-space:nowrap;animation:tickerGlow 3s ease-in-out infinite}.ticker span:nth-child(2){animation-delay:1s}.ticker span:nth-child(3){animation-delay:2s}@keyframes tickerGlow{50%{color:var(--g);text-shadow:0 0 12px #62ff91}}
+.quick div,.card,.panel,.banner{transition:transform .35s cubic-bezier(.2,.8,.2,1),border-color .35s,box-shadow .35s}.quick div:hover,.card:hover{transform:translateY(-8px) scale(1.015);border-color:var(--g);box-shadow:0 15px 40px #0008,0 0 22px #62ff9117}.card{position:relative}.card:after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;background:linear-gradient(115deg,transparent 30%,#ffffff0b 48%,transparent 65%);transform:translateX(-120%);transition:transform .7s}.card:hover:after{transform:translateX(120%)}.cover{position:relative}.cover:after{content:"PLAY / PREVIEW";position:absolute;bottom:10px;right:10px;padding:6px 9px;border:1px solid #80ffa180;border-radius:20px;background:#07100bd9;color:#9cffb5;font-size:8px;letter-spacing:1.5px;opacity:0;transform:translateY(6px);transition:.3s}.card:hover .cover:after{opacity:1;transform:none}
+.cta,.pill.solid,.mini{transition:transform .2s,box-shadow .2s,filter .2s}.cta:hover,.pill.solid:hover{transform:translateY(-2px);box-shadow:var(--glow);filter:brightness(1.08)}button:active{transform:scale(.97)}
+.page.active{animation:pageIn .45s ease both}@keyframes pageIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.section{position:relative}.section h2{letter-spacing:-1px}.section .eyebrow{animation:blinkSoft 3s infinite}@keyframes blinkSoft{50%{opacity:.55}}
+/* motion showcase panels */
+.motion-stage{position:relative;min-height:245px;overflow:hidden;border:1px solid #477653;border-radius:16px;background:radial-gradient(ellipse at 50% 100%,#1d5831,#08120b 72%);display:flex;align-items:center;justify-content:center;margin:18px 0 25px;isolation:isolate}
+.motion-stage:before,.motion-stage:after{content:"";position:absolute;border:1px solid #74ff9b45;border-radius:50%;width:230px;height:230px;animation:stageOrbit 12s linear infinite}.motion-stage:after{width:330px;height:330px;animation-direction:reverse;opacity:.5}
+@keyframes stageOrbit{to{transform:rotate(360deg) scale(1.12)}}.motion-word{font-size:clamp(32px,7vw,76px);font-weight:1000;letter-spacing:-4px;text-align:center;color:#d9ffe2;text-shadow:0 0 18px #62ff91,0 0 50px #62ff9160;z-index:1;animation:wordWave 4s ease-in-out infinite}.motion-word small{display:block;font-size:10px;letter-spacing:5px;color:#8dffa9;text-shadow:none;margin-top:8px}@keyframes wordWave{50%{transform:scale(1.06);filter:brightness(1.3)}}
+.scanline{position:absolute;inset:0;background:linear-gradient(transparent 48%,#7bffa10c 50%,transparent 52%);background-size:100% 8px;pointer-events:none;animation:scan 8s linear infinite}@keyframes scan{to{background-position:0 100%}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition:none!important}}
+</style>
 <script>
-const firebaseConfig={
-apiKey:"AIzaSyA_yfTI9pz1SV-C73UpXDv6lEpi-lLHnGc",
-authDomain:"cts-mod.firebaseapp.com",
-projectId:"cts-mod",
-storageBucket:"cts-mod.firebasestorage.app",
-messagingSenderId:"414535567539",
-appId:"1:414535567539:web:21724a89219d50cf8348c6"
-};
-firebase.initializeApp(firebaseConfig);
-const auth=firebase.auth(),db=firebase.firestore(),storage=firebase.storage();
-const WA="918976034412";
-let customer=null,isAdmin=false,products=[],wishlist=[];
-const $=id=>document.getElementById(id);
-const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const money=n=>"₹"+Number(n||0).toLocaleString("en-IN");
-
-function go(id){
-document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));
-$(id).classList.add("active");
-document.querySelectorAll("[data-page]").forEach(x=>x.classList.toggle("active",x.dataset.page===id));
-$("nav").classList.remove("open");window.scrollTo(0,0);
-if(id==="profile")openProfile();if(id==="admin")showAdmin();
-}
-document.querySelectorAll("[data-page]").forEach(x=>x.onclick=()=>go(x.dataset.page));
-function openModal(id){$(id).classList.remove("hidden")}
-function closeModal(id){$(id).classList.add("hidden")}
-function guestMode(){auth.signOut();closeModal("authModal")}
-
-async function registerCustomer(){
-let phone=$("regPhone").value.trim(),email=$("regEmail").value.trim(),p=$("regPassword").value,c=$("regConfirm").value;
-if(!phone||!email||!p||!c)return $("authMessage").textContent="Fill all fields.";
-if(p!==c)return $("authMessage").textContent="Passwords do not match.";
-if(p.length<6)return $("authMessage").textContent="Password must be at least 6 characters.";
-try{
-let r=await auth.createUserWithEmailAndPassword(email,p);
-await db.collection("customers").doc(r.user.uid).set({phone,email,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
-closeModal("authModal");
-}catch(e){$("authMessage").textContent=e.message}
-}
-async function loginCustomer(){
-try{await auth.signInWithEmailAndPassword($("loginEmail").value.trim(),$("loginPassword").value);closeModal("authModal")}
-catch(e){$("authMessage").textContent=e.message}
-}
-async function logout(){await auth.signOut();go("home")}
-auth.onAuthStateChanged(async u=>{
-customer=u;isAdmin=false;
-$("loginTop").classList.toggle("hidden",!!u);
-$("logoutTop").classList.toggle("hidden",!u);
-$("welcomeText").textContent=u?"SIGNED IN · "+u.email:"BROWSING AS GUEST";
-if(u){try{let a=await db.collection("admins").doc(u.uid).get();isAdmin=a.exists&&a.data().role==="admin"}catch(e){}}
-renderAll();if($("profile").classList.contains("active"))openProfile();
+// Lightweight reveal animation; no libraries or extra server required.
+document.addEventListener('DOMContentLoaded',()=>{
+ const targets='.quick div,.card,.panel,.banner,.section,.motion-stage';
+ const reveal=()=>document.querySelectorAll(targets).forEach((el,i)=>{if(el.dataset.revealed)return;let r=el.getBoundingClientRect();if(r.top<innerHeight-35){el.dataset.revealed='1';el.animate([{opacity:0,transform:'translateY(22px)'},{opacity:1,transform:'translateY(0)'}],{duration:650,delay:Math.min(i%5*65,260),easing:'cubic-bezier(.2,.8,.2,1)',fill:'both'})}});
+ addEventListener('scroll',reveal,{passive:true});setTimeout(reveal,250);
 });
-
-async function loadProducts(){
-try{
-let s=await db.collection("products").get();
-products=s.docs.map(d=>({id:d.id,...d.data()})).filter(p=>p.active!==false).sort((a,b)=>(b.createdAt?.toMillis?.()||0)-(a.createdAt?.toMillis?.()||0));
-renderAll();
-}catch(e){$("storeGrid").textContent="Could not load products: "+e.message}
-}
-function card(p){
-let im=p.image||p.imageUrl||"";
-return `<article class="card"><div class="cover">${im?`<img src="${esc(im)}" alt="">`:"✳"}</div><div class="body"><span class="tag">${esc(p.websiteType||p.category||"Digital")}</span><h3>${esc(p.name||"Untitled")}</h3><p>${esc(p.description||"")}</p><div class="price">${p.price?money(p.price):"Contact for price"}</div><button class="mini" onclick="details('${p.id}')">View details</button> <button class="mini" onclick="saveWish('${p.id}')">♡ Save</button></div></article>`;
-}
-function renderCatalog(type){
-let web=type==="websites",q=$(web?"webSearch":"storeSearch").value.toLowerCase(),cat=web?$("webType").value:$("storeCategory").value,sort=$(web?"webSort":"storeSort").value;
-let a=products.filter(p=>web?(["Websites","Website","Website Store","websites"].includes(p.category)||!!p.websiteType):true);
-if(cat)a=a.filter(p=>web?(p.websiteType||"Other")===cat:p.category===cat);
-a=a.filter(p=>(p.name||"").toLowerCase().includes(q)||(p.description||"").toLowerCase().includes(q));
-if(sort==="low")a.sort((x,y)=>(+x.price||0)-(+y.price||0));
-if(sort==="high")a.sort((x,y)=>(+y.price||0)-(+x.price||0));
-$(web?"webGrid":"storeGrid").innerHTML=a.map(card).join("")||'<p class="muted">No listings yet. Check back soon.</p>';
-}
-function renderAll(){
-renderCatalog("store");renderCatalog("websites");
-$("featured").innerHTML=products.filter(p=>p.featured).slice(0,4).map(card).join("")||'<p class="muted">Featured items coming soon.</p>';
-$("homeWeb").innerHTML=products.filter(p=>p.websiteType||["Websites","Website","Website Store","websites"].includes(p.category)).slice(0,3).map(card).join("")||'<p class="muted">Add website designs from Admin to show them here.</p>';
-$("appsGrid").innerHTML=products.filter(p=>p.category==="Apps & Software").map(card).join("")||'<p class="muted">No apps yet.</p>';
-$("creatorGrid").innerHTML=products.filter(p=>p.category==="Creator Tools").map(card).join("")||'<p class="muted">No creator resources yet.</p>';
-if(isAdmin)renderAdminProducts();
-}
-function details(id){
-let p=products.find(x=>x.id===id);if(!p)return;
-$("detailTitle").textContent=p.name;
-let gallery=Array.isArray(p.gallery)?p.gallery:typeof p.gallery==="string"?p.gallery.split(",").map(x=>x.trim()).filter(Boolean):[];
-let imgs=[p.image||p.imageUrl,...gallery].filter(Boolean);
-$("detailBody").innerHTML=(imgs.length?`<div class="grid">${imgs.map(x=>`<div class="cover"><img src="${esc(x)}"></div>`).join("")}</div>`:"")+`<p class="muted">${esc(p.description||"")}</p><div class="price">${p.price?money(p.price):"Contact for price"}</div><button class="btn" onclick="placeOrder('${p.id}')">Order / Contact</button>`;
-openModal("detailModal");
-}
-function placeOrder(id){
-let p=products.find(x=>x.id===id);if(!p)return;
-if(p.websiteType||["Websites","Website","Website Store","websites"].includes(p.category)){
-let n=prompt("Your name (optional):","");if(n===null)return;
-let req=prompt("What features do you need?","");if(req===null)return;
-let msg=`CTS TOOL WEBSITE ORDER\nDesign: ${p.name}\nType: ${p.websiteType||"Custom"}\nPrice: ${p.price?money(p.price):"Please quote"}\nCustomer: ${n||customer?.email||"Guest"}\nRequirements: ${req||"Please contact me."}`;
-window.open("https://wa.me/"+WA+"?text="+encodeURIComponent(msg),"_blank");return;
-}
-if(!customer){closeModal("detailModal");openModal("authModal");return}
-purchase(p);
-}
-function customOrder(){
-let n=prompt("Your name:","");if(n===null)return;
-let t=prompt("Website type:","Business");if(t===null)return;
-let d=prompt("Describe your idea:","");if(d===null)return;
-window.open("https://wa.me/"+WA+"?text="+encodeURIComponent(`CTS TOOL CUSTOM WEBSITE ENQUIRY\nName: ${n}\nType: ${t}\nDetails: ${d}\nPlease share a quote.`),"_blank");
-}
-async function purchase(p){
-let plans=["day","week","month","custom"].filter(k=>Number(p[k])>0);
-if(!plans.length){window.open("https://wa.me/"+WA+"?text="+encodeURIComponent(`CTS product enquiry\n${p.name}\n${customer.email}`),"_blank");return}
-let plan=prompt("Choose plan: "+plans.join(", "));if(!plan)return;
-plan=plan.toLowerCase().trim();if(!plans.includes(plan))return alert("Invalid plan.");
-let amount=Number(p[plan]);
-try{
-await db.collection("purchaseRequests").add({uid:customer.uid,email:customer.email,product:p.name,productId:p.id,plan,amount,status:"Pending",createdAt:firebase.firestore.FieldValue.serverTimestamp()});
-window.open("https://wa.me/"+WA+"?text="+encodeURIComponent(`CTS Purchase Request\nProduct: ${p.name}\nPlan: ${plan}\nPrice: ₹${amount}\nCustomer: ${customer.email}`),"_blank");
-}catch(e){alert(e.message)}
-}
-async function saveWish(id){
-if(!customer)return openModal("authModal");
-try{
-let r=db.collection("customers").doc(customer.uid),s=await r.get(),a=s.data()?.wishlist||[];
-a=a.includes(id)?a.filter(x=>x!==id):[...a,id];
-await r.set({wishlist:a},{merge:true});wishlist=a;alert("Wishlist updated.");openProfile();
-}catch(e){alert(e.message)}
-}
-async function openProfile(){
-if(!customer){$("profileGuest").classList.remove("hidden");$("profileArea").classList.add("hidden");return}
-$("profileGuest").classList.add("hidden");$("profileArea").classList.remove("hidden");
-try{
-let [u,s]=await Promise.all([db.collection("customers").doc(customer.uid).get(),db.collection("purchaseRequests").where("uid","==",customer.uid).get()]);
-let d=u.data()||{};wishlist=d.wishlist||[];
-$("profileDetails").textContent="Email: "+customer.email+" · Phone: "+(d.phone||"Not added");
-$("purchaseHistory").innerHTML=s.empty?"<p class='muted'>No purchase requests.</p>":s.docs.map(x=>{let p=x.data(),st=p.status||"Pending",ex=p.expiresAt?.toDate?.();if(st==="Active"&&ex&&ex<new Date())st="Expired";return `<div class="item"><b>${esc(p.product)}</b><p class="tiny">${esc(p.plan)} · ${money(p.amount)} · ${esc(st)}</p></div>`}).join("");
-$("wishlistGrid").innerHTML=products.filter(p=>wishlist.includes(p.id)).map(card).join("")||'<p class="muted">Wishlist empty.</p>';
-}catch(e){$("purchaseHistory").textContent=e.message}
-}
-async function adminLogin(){
-try{
-let r=await auth.signInWithEmailAndPassword($("adminEmail").value.trim(),$("adminPassword").value);
-let d=await db.collection("admins").doc(r.user.uid).get();
-if(!d.exists||d.data().role!=="admin"){await auth.signOut();throw Error("Not an authorized admin.")}
-isAdmin=true;closeModal("adminLoginModal");go("admin");showAdmin();
-}catch(e){$("adminMessage").textContent=e.message}
-}
-async function checkAdmin(){
-if(!auth.currentUser)return false;
-let d=await db.collection("admins").doc(auth.currentUser.uid).get();
-return d.exists&&d.data().role==="admin";
-}
-async function showAdmin(){
-if(!customer){$("adminGate").textContent="Login with admin account.";return}
-isAdmin=await checkAdmin();
-$("adminGate").classList.toggle("hidden",isAdmin);
-$("adminArea").classList.toggle("hidden",!isAdmin);
-if(!isAdmin){$("adminGate").textContent="This account has no admin access.";return}
-renderAdminProducts();loadRequests();loadAnnouncements();loadVideos();
-}
-function renderAdminProducts(){
-$("adminProducts").innerHTML=products.map(p=>`<div class="item"><b>${esc(p.name)}</b><p class="tiny">${esc(p.category)} · ${money(p.price)}</p><button class="mini" onclick="editProduct('${p.id}')">Edit</button><button class="mini" onclick="deleteProduct('${p.id}')">Delete</button></div>`).join("");
-}
-function editProduct(id){
-let p=products.find(x=>x.id===id);if(!p)return;
-$("productId").value=id;$("pName").value=p.name||"";$("pDescription").value=p.description||"";
-$("pCategory").value=p.category||"Digital Products";$("pWebsiteType").value=p.websiteType||"Other";
-$("pPrice").value=p.price||"";$("pImageUrl").value=p.image||"";
-$("pGallery").value=Array.isArray(p.gallery)?p.gallery.join(", "):p.gallery||"";
-$("pDownload").value=p.downloadUrl||"";$("pFeatured").value=String(!!p.featured);
-window.scrollTo(0,0);
-}
-async function upload(file,path){
-return new Promise((ok,no)=>{
-let ref=storage.ref().child(path),task=ref.put(file);
-task.on("state_changed",s=>$("uploadStatus").textContent="Uploading "+file.name+" · "+Math.round(s.bytesTransferred/s.totalBytes*100)+"%",no,async()=>{try{ok(await ref.getDownloadURL())}catch(e){no(e)}});
-});
-}
-async function saveProduct(){
-let b=$("saveBtn");if(b.disabled)return;b.disabled=true;
-try{
-if(!await checkAdmin())throw Error("Admin login required.");
-let name=$("pName").value.trim();if(!name)throw Error("Enter product name.");
-let id=$("productId").value,img=$("pImageFile").files[0],apk=$("pApk").files[0];
-let d={name,description:$("pDescription").value,category:$("pCategory").value,websiteType:$("pWebsiteType").value,price:Number($("pPrice").value)||0,featured:$("pFeatured").value==="true",updatedAt:firebase.firestore.FieldValue.serverTimestamp()};
-if($("pImageUrl").value.trim())d.image=$("pImageUrl").value.trim();
-if(img){if(!img.type.startsWith("image/")||img.size>5*1024*1024)throw Error("Image must be under 5 MB.");d.image=await upload(img,"product-images/"+Date.now()+"_"+img.name.replace(/[^a-z0-9._-]/gi,"_"))}
-if($("pGallery").value.trim())d.gallery=$("pGallery").value.split(",").map(x=>x.trim()).filter(Boolean);
-if($("pDownload").value.trim())d.downloadUrl=$("pDownload").value.trim();
-if(apk){if(!apk.name.toLowerCase().endsWith(".apk")||apk.size>100*1024*1024)throw Error("APK must be valid and under 100 MB.");d.apkUrl=await upload(apk,"product-apks/"+Date.now()+"_"+apk.name.replace(/[^a-z0-9._-]/gi,"_"));d.apkName=apk.name}
-if(id)await db.collection("products").doc(id).update(d);
-else{d.createdAt=firebase.firestore.FieldValue.serverTimestamp();await db.collection("products").add(d)}
-$("uploadStatus").textContent="Saved.";clearForm();await loadProducts();
-}catch(e){$("uploadStatus").textContent="ERROR: "+(e.code||"")+" "+e.message;alert(e.message)}
-finally{b.disabled=false}
-}
-function clearForm(){
-["productId","pName","pDescription","pPrice","pImageUrl","pGallery","pDownload","pImageFile","pApk"].forEach(x=>$(x).value="");
-$("uploadStatus").textContent="Ready.";
-}
-async function deleteProduct(id){
-if(!confirm("Delete product?")||!await checkAdmin())return;
-await db.collection("products").doc(id).delete();loadProducts();
-}
-async function loadRequests(){
-if(!isAdmin)return;
-try{
-let s=await db.collection("purchaseRequests").get();
-$("adminRequests").innerHTML=s.empty?"No requests.":s.docs.map(x=>{let p=x.data();return `<div class="item"><b>${esc(p.product)}</b><p class="tiny">${esc(p.email)} · ${esc(p.plan)} · ${money(p.amount)} · ${esc(p.status)}</p><button class="mini" onclick="activate('${x.id}')">Activate</button><button class="mini" onclick="deactivate('${x.id}')">Deactivate</button></div>`}).join("");
-}catch(e){$("adminRequests").textContent=e.message}
-}
-async function activate(id){
-let days=Number(prompt("Access duration in days:","30"));
-if(!Number.isInteger(days)||days<1||days>365)return alert("Enter 1–365 days.");
-if(!confirm("Confirm payment verified?"))return;
-try{
-if(!await checkAdmin())throw Error("Unauthorized");
-await db.collection("purchaseRequests").doc(id).update({status:"Active",durationDays:days,activatedAt:firebase.firestore.FieldValue.serverTimestamp(),expiresAt:firebase.firestore.Timestamp.fromDate(new Date(Date.now()+days*86400000))});
-loadRequests();
-}catch(e){alert(e.message)}
-}
-async function deactivate(id){
-if(!confirm("Deactivate?")||!await checkAdmin())return;
-await db.collection("purchaseRequests").doc(id).update({status:"Deactivated"});loadRequests();
-}
-async function addAnnouncement(){
-if(!await checkAdmin())return alert("Unauthorized");
-let title=$("aTitle").value.trim(),text=$("aText").value.trim();
-if(!title||!text)return alert("Enter title and message.");
-await db.collection("announcements").add({title,text,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
-$("aTitle").value=$("aText").value="";loadAnnouncements();
-}
-async function loadAnnouncements(){
-try{
-let s=await db.collection("announcements").get(),a=s.docs.map(d=>({id:d.id,...d.data()}));
-$("announcements").innerHTML=a.slice(-3).reverse().map(x=>`<div class="panel"><span class="tag">CTS UPDATE</span><h3>${esc(x.title)}</h3><p class="muted">${esc(x.text)}</p></div>`).join("")||'<p class="muted">No announcements.</p>';
-$("adminAnnouncements").innerHTML=isAdmin?a.map(x=>`<div class="item">${esc(x.title)} <button class="mini" onclick="delAnnouncement('${x.id}')">Delete</button></div>`).join():"";
-}catch(e){}
-}
-async function delAnnouncement(id){
-if(await checkAdmin()){await db.collection("announcements").doc(id).delete();loadAnnouncements()}
-}
-async function addVideo(){
-if(!await checkAdmin())return alert("Unauthorized");
-let title=$("vTitle").value.trim(),url=$("vUrl").value.trim();
-if(!title||!url)return alert("Enter title and URL.");
-await db.collection("videos").add({title,url,createdAt:firebase.firestore.FieldValue.serverTimestamp()});
-$("vTitle").value=$("vUrl").value="";loadVideos();
-}
-function ytId(u){
-let m=String(u).match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([\w-]{11})/);
-return m?m[1]:String(u).trim();
-}
-async function loadVideos(){
-try{
-let s=await db.collection("videos").get(),a=s.docs.map(d=>({id:d.id,...d.data()}));
-$("videoGrid").innerHTML=a.map(v=>`<div class="card"><div class="cover" style="height:150px"><iframe width="100%" height="100%" src="https://www.youtube-nocookie.com/embed/${esc(ytId(v.url))}" title="${esc(v.title)}" allowfullscreen></iframe></div><div class="body"><h3>${esc(v.title)}</h3></div></div>`).join("")||'<p class="muted">Videos coming soon.</p>';
-$("adminVideos").innerHTML=isAdmin?a.map(v=>`<div class="item">${esc(v.title)} <button class="mini" onclick="delVideo('${v.id}')">Delete</button></div>`).join(""):"";
-}catch(e){}
-}
-async function delVideo(id){
-if(await checkAdmin()){await db.collection("videos").doc(id).delete();loadVideos()}
-}
-function countText(){
-let t=$("textTool").value;
-$("textCount").textContent=(t.trim()?t.trim().split(/\s+/).length:0)+" words · "+t.length+" characters";
-}
-function convertText(m){
-let t=$("textTool").value;
-if(m==="upper")t=t.toUpperCase();
-if(m==="lower")t=t.toLowerCase();
-if(m==="title")t=t.toLowerCase().replace(/\b\w/g,x=>x.toUpperCase());
-$("textTool").value=t;countText();
-}
-function copyVal(id){
-$(id).select();document.execCommand("copy");
-}
-function genPass(){
-let n=Math.max(8,Math.min(40,+$("passLength").value||16)),c="ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%&*",s="";
-for(let i=0;i<n;i++)s+=c[Math.floor(Math.random()*c.length)];
-$("passOut").value=s;
-}
-function runCmd(){
-let c=$("cmd").value.trim().toLowerCase(),o=$("termOut"),m={help:"Commands: help, date, whoami, clear",date:new Date().toString(),whoami:"CTS demo visitor"};
-if(c==="clear")o.textContent="";
-else o.textContent+="\n> "+c+"\n"+(m[c]||"Command not found. Type help.");
-$("cmd").value="";
-}
-function checkQuiz(){
-$("quizResult").textContent=$("quiz").value==="yes"?"Correct! Use a long, unique password for every account.":"Try again.";
-}
-loadProducts();loadAnnouncements();loadVideos();
 </script>
-</body>
-  </html>
+
+</head><body>
+<header><a class="logo" href="#" onclick="go('home');return false">CTS<i>.</i>TOOL<small>CYBER TECHEY STROM</small></a><nav id="nav"><button class="active" data-page="home">Home</button><button data-page="store">Store</button><button data-page="websites">Websites</button><button data-page="apps">Apps</button><button data-page="creator">Creator</button><button data-page="tools">Tools</button><button data-page="videos">Videos</button><button data-page="community">Community</button></nav><div><button class="pill" onclick="go('profile')">Account</button><button class="pill solid" id="loginTop" onclick="openModal('authModal')">Login</button><button class="pill hidden" id="logoutTop" onclick="customerLogout()">Logout</button><button class="pill menu" onclick="$('nav').classList.toggle('open')">☰</button></div></header>
+<main>
+<section class="page active" id="home"><div class="hero"><div><div class="eyebrow">THE DIGITAL CREATOR MARKETPLACE</div><h1>Build your<br>next <span class="green">big thing.</span></h1><p class="muted">Discover digital products, order a custom website and find creator resources — all in one digital studio.</p><div class="actions"><button class="cta" onclick="go('websites')">Explore website designs ↗</button><button class="cta ghost" onclick="go('store')">Visit store</button></div><p class="tiny" id="welcomeText">Browsing as guest</p></div><div class="heroArt"><div class="mark">CTS</div><div class="float f1"><b>01 / WEB STUDIO</b><small>Websites made to stand out</small></div><div class="float f2"><b>02 / DIGITAL STORE</b><small>Apps · Tools · Resources</small></div><div class="float f3"><b>03 / CREATOR SPACE</b><small>Made for the next generation</small></div></div></div><div class="motion-stage"><div class="scanline"></div><div class="motion-word">CYBER TECHEY STROM<small>CREATE • INNOVATE • DOMINATE</small></div></div><div class="ticker"><span>DESIGN • DEVELOP • CREATE</span><span>POWERED BY CYBER TECHEY STROM</span><span>YOUR DIGITAL SPACE</span></div><div class="quick"><div onclick="go('websites')"><span>↗</span><b>Website Studio</b><small class="tiny">Choose a design & order</small></div><div onclick="go('store')"><span>▧</span><b>Digital Store</b><small class="tiny">Explore products</small></div><div onclick="go('creator')"><span>✳</span><b>Creator Resources</b><small class="tiny">Assets & editing</small></div><div onclick="go('tools')"><span>⌘</span><b>Free Tools</b><small class="tiny">Browser utilities</small></div></div><div class="section"><div><div class="eyebrow">HANDPICKED</div><h2>Featured drops</h2></div><button class="mini" onclick="go('store')">View all ↗</button></div><div class="grid" id="featured"></div><div class="section"><div><div class="eyebrow">WEB STUDIO</div><h2>Find your website style</h2></div><button class="mini" onclick="go('websites')">Explore ↗</button></div><div class="grid" id="homeWeb"></div><div class="banner"><div><div class="eyebrow">HAVE A PROJECT?</div><h2>Let's make it real.</h2><p class="muted">Tell us what you want to build.</p></div><button class="cta" onclick="customWebsiteOrder()">Start a project ↗</button></div><div class="section"><h2>Latest updates</h2></div><div id="announcements" class="grid"></div></section>
+<section class="page" id="store"><div class="eyebrow">DIGITAL MARKETPLACE</div><h1>The Store<span class="green">.</span></h1><p class="muted">Browse software, creator resources and digital products.</p><div class="toolbar"><input id="storeSearch" placeholder="Search products..." oninput="renderCatalog('store')"><select id="storeCategory" onchange="renderCatalog('store')"><option value="">All categories</option><option>Apps & Software</option><option>Creator Tools</option><option>Digital Products</option><option>Termux Commands</option><option>My Products</option><option>Free Fire Resources</option></select><select id="storeSort" onchange="renderCatalog('store')"><option value="new">Newest</option><option value="low">Price low-high</option><option value="high">Price high-low</option></select></div><div class="grid" id="storeGrid"></div></section>
+<section class="page" id="websites"><div class="eyebrow">CTS WEB STUDIO / 01</div><h1>Websites that<br><span class="green">work for you.</span></h1><p class="muted">Choose a design, view previews and send your order directly to CTS on WhatsApp.</p><div class="motion-stage"><div class="scanline"></div><div class="motion-word">WEB STUDIO<small>DESIGNED TO MAKE AN IMPACT</small></div></div><div class="banner"><div><b>Need something unique?</b><p class="muted">Request a custom website quote.</p></div><button class="cta" onclick="customWebsiteOrder()">Custom website ↗</button></div><div class="toolbar"><input id="webSearch" placeholder="Search website designs..." oninput="renderCatalog('websites')"><select id="webType" onchange="renderCatalog('websites')"><option value="">All types</option><option>Business</option><option>Portfolio</option><option>E-commerce</option><option>Restaurant</option><option>Education</option><option>Landing Page</option><option>Blog</option><option>Other</option></select><select id="webSort" onchange="renderCatalog('websites')"><option value="new">Newest</option><option value="low">Price low-high</option><option value="high">Price high-low</option></select></div><div class="grid" id="webGrid"></div><p class="tiny">Preview images are design references. Final features, delivery and pricing are confirmed on WhatsApp.</p></section>
+<section class="page" id="apps"><div class="eyebrow">SOFTWARE COLLECTION</div><h1>Apps & <span class="green">Software.</span></h1><div class="grid" id="appsGrid"></div></section>
+<section class="page" id="creator"><div class="eyebrow">FOR THE MAKERS</div><h1>Creator <span class="green">space.</span></h1><p class="muted">Resources for editors, designers and video creators.</p><div class="grid" id="creatorGrid"></div><div class="panel"><h2>Creator links</h2><a class="mini" href="https://www.canva.com/" target="_blank">Canva ↗</a> <a class="mini" href="https://www.photopea.com/" target="_blank">Photopea ↗</a> <a class="mini" href="https://www.capcut.com/" target="_blank">CapCut ↗</a></div></section>
+<section class="page" id="tools"><div class="eyebrow">SMALL UTILITIES / BIG HELP</div><h1>Tools <span class="green">lab.</span></h1><div class="two"><div class="panel"><h3>Text studio</h3><textarea id="textTool" oninput="countText()" placeholder="Write text..."></textarea><p class="tiny" id="textCount">0 words · 0 characters</p><button class="mini" onclick="convertText('upper')">UPPERCASE</button> <button class="mini" onclick="convertText('lower')">lowercase</button> <button class="mini" onclick="convertText('title')">Title Case</button> <button class="mini" onclick="copyVal('textTool')">Copy</button></div><div class="panel"><h3>Password generator</h3><input id="passLength" type="number" min="8" max="40" value="16"><button class="mini" onclick="genPass()">Generate</button><input id="passOut" readonly><button class="mini" onclick="copyVal('passOut')">Copy</button></div><div class="panel"><h3>Demo terminal</h3><p class="tiny">Safe simulation; no real device commands run.</p><input id="cmd" placeholder="help, date, whoami, clear"><button class="mini" onclick="runCmd()">Run</button><div class="terminal" id="termOut">CTS demo terminal. Type help.</div></div><div class="panel"><h3>Cyber safety quiz</h3><p>Which password habit is safest?</p><select id="quiz"><option value="">Choose</option><option value="yes">Long, unique password</option><option>Use 123456 everywhere</option><option>Share with friends</option></select><button class="mini" onclick="checkQuiz()">Check</button><p id="quizResult" class="tiny"></p></div></div></section>
+<section class="page" id="videos"><div class="eyebrow">WATCH & LEARN</div><h1>CTS <span class="green">videos.</span></h1><div class="grid" id="videoGrid"></div><a class="cta" href="https://www.youtube.com/" target="_blank">Open YouTube ↗</a></section>
+<section class="page" id="community"><div class="eyebrow">STAY CONNECTED</div><h1>The CTS <span class="green">community.</span></h1><div class="grid"><div class="panel"><h2>Telegram</h2><p class="muted">Join the CTS channel for updates.</p><a class="cta" href="https://t.me/cybertecheystrom" target="_blank">Join channel ↗</a></div><div class="panel"><h2>Support</h2><p class="muted">Questions about products or website orders.</p><a class="cta" href="https://wa.me/918976034412" target="_blank">WhatsApp ↗</a></div><div class="panel"><h2>YouTube</h2><p class="muted">CYBER TECHEY STROM.</p><a class="cta" href="https://www.youtube.com/" target="_blank">Visit channel ↗</a></div></div></section>
+<section class="page" id="profile"><div class="eyebrow">YOUR SPACE</div><h1>My <span class="green">account.</span></h1><div id="profileGuest" class="panel"><p class="muted">Login to see your purchase history.</p><button class="cta" onclick="openModal('authModal')">Login / Register</button></div><div id="profileArea" class="hidden"><div class="panel"><p id="profileDetails"></p><button class="mini" onclick="customerLogout()">Logout</button></div><h2>Purchase history</h2><div id="purchaseHistory"></div><h2>Wishlist</h2><div class="grid" id="wishlistGrid"></div></div></section>
+<section class="page" id="admin"><div class="eyebrow">CONTROL ROOM</div><h1>CTS <span class="green">admin.</span></h1><div id="adminGate" class="panel">Checking access...</div><div id="adminArea" class="hidden"><h2>Add / Edit Product</h2><div class="panel"><input id="productId" type="hidden"><label>Name</label><input id="pName"><label>Description</label><textarea id="pDescription"></textarea><label>Category</label><select id="pCategory"><option>Apps & Software</option><option>Creator Tools</option><option>Digital Products</option><option>Websites</option><option>Termux Commands</option><option>My Products</option><option>Free Fire Resources</option></select><label>Website type</label><select id="pWebsiteType"><option>Business</option><option>Portfolio</option><option>E-commerce</option><option>Restaurant</option><option>Education</option><option>Landing Page</option><option>Blog</option><option>Other</option></select><label>Price ₹</label><input id="pPrice" type="number" min="0"><label>Image URL</label><input id="pImageUrl" placeholder="https://..."><label>Upload preview image</label><input id="pImageFile" type="file" accept="image/*"><label>Extra preview image URLs (comma separated)</label><textarea id="pGallery"></textarea><label>External download URL</label><input id="pDownload"><label>APK file (optional)</label><input id="pApk" type="file" accept=".apk"><label>Featured?</label><select id="pFeatured"><option value="false">No</option><option value="true">Yes</option></select><p id="uploadStatus" class="status">Ready.</p><button class="cta" id="saveBtn" onclick="saveProduct()">Save product</button> <button class="mini" onclick="clearForm()">Clear</button></div><h2>Manage products</h2><div id="adminProducts"></div><h2>Purchase requests</h2><button class="mini" onclick="loadRequests()">Refresh</button><div id="adminRequests"></div><h2>Announcements</h2><div class="panel"><input id="aTitle" placeholder="Title"><textarea id="aText" placeholder="Message"></textarea><button class="mini" onclick="addAnnouncement()">Publish</button></div><div id="adminAnnouncements"></div><h2>YouTube videos</h2><div class="panel"><input id="vTitle" placeholder="Video title"><input id="vUrl" placeholder="YouTube URL or ID"><button class="mini" onclick="addVideo()">Add video</button></div><div id="adminVideos"></div></div></section>
+</main><footer><b>CTS TOOL · Powered by CYBER TECHEY STROM</b><span>Digital products · Website studio · Creator tools</span><span>© 2026 CTS TOOL</span></footer>
+<div class="modal hidden" id="authModal" onclick="outside(event,'authModal')"><div class="modalBox"><div class="modalHead"><h2>CTS Account</h2><button class="close" onclick="closeModal('authModal')">✕</button></div><h3>Create Account</h3><input id="regPhone" placeholder="Phone Number"><input id="regEmail" type="email" placeholder="Email Address"><input id="regPassword" type="password" placeholder="Create Password"><input id="regConfirm" type="password" placeholder="Confirm Password"><button class="cta" onclick="registerCustomer()">Create Account</button><hr><h3>Login</h3><input id="loginEmail" type="email" placeholder="Email Address"><input id="loginPassword" type="password" placeholder="Password"><button class="cta" onclick="loginCustomer()">Login</button> <button class="mini" onclick="guestMode()">Continue as Guest</button><p id="authMessage" class="tiny"></p></div></div>
+<div class="modal hidden" id="detailModal" onclick="outside(event,'detailModal')"><div class="modalBox"><div class="modalHead"><h2 id="detailTitle">Details</h2><button class="close" onclick="closeModal('detailModal')">✕</button></div><div id="detailBody"></div></div></div>
+<div class="modal hidden" id="adminLoginModal" onclick="outside(event,'adminLoginModal')"><div class="modalBox"><div class="modalHead"><h2>Admin login</h2><button class="close" onclick="closeModal('adminLoginModal')">✕</button></div><input id="adminEmail" type="email" placeholder="Admin Email"><input id="adminPassword" type="password" placeholder="Admin Password"><button class="cta" onclick="adminLogin()">Login to Admin</button><p id="adminMessage" class="tiny"></p></div></div>
+<script>
+const firebaseConfig={apiKey:"AIzaSyA_yfTI9pz1SV-C73UpXDv6lEpi-lLHnGc",authDomain:"cts-mod.firebaseapp.com",projectId:"cts-mod",storageBucket:"cts-mod.firebasestorage.app",messagingSenderId:"414535567539",appId:"1:414535567539:web:21724a89219d50cf8348c6"};firebase.initializeApp(firebaseConfig);const auth=firebase.auth(),db=firebase.firestore(),storage=firebase.storage(),WA="918976034412";let customer=null,isAdmin=false,products=[],wishlist=[];const $=id=>document.getElementById(id),esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])),money=n=>"₹"+Number(n||0).toLocaleString("en-IN");
+function go(id){document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));$(id).classList.add("active");document.querySelectorAll("[data-page]").forEach(x=>x.classList.toggle("active",x.dataset.page===id));$("nav").classList.remove("open");scrollTo(0,0);if(id==="profile")openProfile();if(id==="admin")showAdmin()}document.querySelectorAll("[data-page]").forEach(x=>x.onclick=()=>go(x.dataset.page));function openModal(id){$(id).classList.remove("hidden")}function closeModal(id){$(id).classList.add("hidden")}function outside(e,id){if(e.target.id===id)closeModal(id)}
+function guestMode(){auth.currentUser&&auth.signOut();closeModal("authModal")}
+async function registerCustomer(){let phone=$("regPhone").value.trim(),email=$("regEmail").value.trim(),p=$("regPassword").value,c=$("regConfirm").value;if(!phone||!email||!p||!c)return $("authMessage").textContent="Fill all fields.";if(p!==c)return $("authMessage").textContent="Passwords do not match.";if(p.length<6)return $("authMessage").textContent="Password must be at least 6 characters.";try{let r=await auth.createUserWithEmailAndPassword(email,p);await db.collection("customers").doc(r.user.uid).set({phone,email,createdAt:firebase.firestore.FieldValue.serverTimestamp()});closeModal("authModal")}catch(e){$("authMessage").textContent=e.message}}
+async function loginCustomer(){try{await auth.signInWithEmailAndPassword($("loginEmail").value.trim(),$("loginPassword").value);closeModal("authModal")}catch(e){$("authMessage").textContent=e.message}}
+async function customerLogout(){await auth.signOut();go("home")}
+auth.onAuthStateChanged(async u=>{customer=u;isAdmin=false;$("loginTop").classList.toggle("hidden",!!u);$("logoutTop").classList.toggle("hidden",!u);$("welcomeText").textContent=u?"SIGNED IN · "+u.email:"BROWSING AS GUEST";if(u){try{let a=await db.collection("admins").doc(u.uid).get();isAdmin=a.exists&&a.data().role==="admin"}catch(e){console.warn(e)}}renderAll();if($("profile").classList.contains("active"))openProfile()});
+async function loadProducts(){try{let s=await db.collection("products").get();products=s.docs.map(d=>({id:d.id,...d.data()})).filter(p=>p.active!==false).sort((a,b)=>(b.createdAt?.toMillis?.()||0)-(a.createdAt?.toMillis?.()||0));renderAll()}catch(e){$("storeGrid").textContent="Could not load products: "+e.message}}
+function card(p){let im=p.image||p.imageUrl||"";return `<article class="card"><div class="cover">${im?`<img src="${esc(im)}" alt="">`:"✳"}</div><div class="body"><span class="tag">${esc(p.websiteType||p.category||"Digital")}</span><h3>${esc(p.name||"Untitled")}</h3><p>${esc(p.description||"")}</p><div class="price">${p.price?money(p.price):"Contact for price"}</div><button class="mini solid" onclick="details('${p.id}')">View details</button> <button class="mini" onclick="saveWish('${p.id}')">♡ Save</button></div></article>`}
+function renderCatalog(type){let web=type==="websites",q=$(web?"webSearch":"storeSearch").value.toLowerCase(),cat=web?$("webType").value:$("storeCategory").value,sort=$(web?"webSort":"storeSort").value;let a=products.filter(p=>web?(p.category==="Websites"||p.category==="Website"||p.category==="Website Store"||p.category==="websites"||!!p.websiteType):true);if(cat)a=a.filter(p=>web?(p.websiteType||"Other")===cat:p.category===cat);a=a.filter(p=>(p.name||"").toLowerCase().includes(q)||(p.description||"").toLowerCase().includes(q));if(sort==="low")a.sort((x,y)=>(+x.price||0)-(+y.price||0));if(sort==="high")a.sort((x,y)=>(+y.price||0)-(+x.price||0));$(web?"webGrid":"storeGrid").innerHTML=a.map(card).join("")||'<p class="muted">No listings yet. Check back soon.</p>'}
+function renderAll(){renderCatalog("store");renderCatalog("websites");$("featured").innerHTML=products.filter(p=>p.featured).slice(0,4).map(card).join("")||'<p class="muted">Featured items coming soon.</p>';$("homeWeb").innerHTML=products.filter(p=>p.websiteType||["Websites","Website","Website Store","websites"].includes(p.category)).slice(0,3).map(card).join("")||'<p class="muted">Add website designs from Admin to show them here.</p>';$("appsGrid").innerHTML=products.filter(p=>p.category==="Apps & Software").map(card).join("")||'<p class="muted">No apps yet.</p>';$("creatorGrid").innerHTML=products.filter(p=>p.category==="Creator Tools").map(card).join("")||'<p class="muted">No creator resources yet.</p>';if(isAdmin)renderAdminProducts()}
+function details(id){let p=products.find(x=>x.id===id);if(!p)return;$("detailTitle").textContent=p.name;let gallery=Array.isArray(p.gallery)?p.gallery:typeof p.gallery==="string"?p.gallery.split(",").map(x=>x.trim()).filter(Boolean):[],imgs=[p.image||p.imageUrl,...gallery].filter(Boolean);$("detailBody").innerHTML=(imgs.length?`<div class="grid">${imgs.map(x=>`<div class="cover"><img src="${esc(x)}"></div>`).join("")}</div>`:"")+`<p class="muted">${esc(p.description||"")}</p><div class="price">${p.price?money(p.price):"Contact for price"}</div><button class="cta" onclick="placeOrder('${p.id}')">${p.websiteType||p.category==="Websites"?"Order on WhatsApp":"Contact / Purchase"}</button>`;openModal("detailModal")}
+function placeOrder(id){let p=products.find(x=>x.id===id);if(!p)return;if(!customer){closeModal("detailModal");openModal("authModal");return}if(p.websiteType||["Websites","Website","Website Store","websites"].includes(p.category)){let n=prompt("Your name (optional):","");if(n===null)return;let req=prompt("What features do you need?","");if(req===null)return;let msg=`CTS TOOL WEBSITE ORDER\nDesign: ${p.name}\nType: ${p.websiteType||"Custom"}\nPrice: ${p.price?money(p.price):"Please quote"}\nCustomer: ${n||customer.email}\nRequirements: ${req||"Please contact me."}\nPlease share next steps.`;window.open("https://wa.me/"+WA+"?text="+encodeURIComponent(msg),"_blank","noopener");return}purchase(p)}
+function customWebsiteOrder(){let n=prompt("Your name:","");if(n===null)return;let t=prompt("Website type (Business / Portfolio / Shop / Other):","Business");if(t===null)return;let d=prompt("Describe your idea:","");if(d===null)return;window.open("https://wa.me/"+WA+"?text="+encodeURIComponent(`CTS TOOL CUSTOM WEBSITE ENQUIRY\nName: ${n}\nType: ${t}\nDetails: ${d}\nPlease share a quote.`),"_blank","noopener")}
+async function purchase(p){let plans=["day","week","month","custom"].filter(k=>Number(p[k])>0);if(!plans.length){window.open("https://wa.me/"+WA+"?text="+encodeURIComponent(`CTS MOD product enquiry\n${p.name}\n${customer.email}`),"_blank");return}let plan=prompt("Choose plan: "+plans.join(", "));if(!plan)return;plan=plan.toLowerCase().trim();if(!plans.includes(plan))return alert("Invalid plan.");let amount=Number(p[plan]);try{await db.collection("purchaseRequests").add({uid:customer.uid,email:customer.email,product:p.name,productId:p.id,plan,amount,status:"Pending",createdAt:firebase.firestore.FieldValue.serverTimestamp()});window.open("https://wa.me/"+WA+"?text="+encodeURIComponent(`CTS MOD Purchase Request\nProduct: ${p.name}\nPlan: ${plan}\nPrice: ₹${amount}\nCustomer: ${customer.email}\nPlease share payment instructions.`),"_blank","noopener")}catch(e){alert(e.message)}}
+async function saveWish(id){if(!customer)return openModal("authModal");try{let r=db.collection("customers").doc(customer.uid),s=await r.get(),a=s.data()?.wishlist||[];a=a.includes(id)?a.filter(x=>x!==id):[...a,id];await r.set({wishlist:a},{merge:true});wishlist=a;alert("Wishlist updated.");openProfile()}catch(e){alert(e.message)}}
+async function openProfile(){if(!customer){$("profileGuest").classList.remove("hidden");$("profileArea").classList.add("hidden");return}$("profileGuest").classList.add("hidden");$("profileArea").classList.remove("hidden");try{let [u,s]=await Promise.all([db.collection("customers").doc(customer.uid).get(),db.collection("purchaseRequests").where("uid","==",customer.uid).get()]),d=u.data()||{};wishlist=d.wishlist||[];$("profileDetails").textContent="Email: "+customer.email+" · Phone: "+(d.phone||"Not added");$("purchaseHistory").innerHTML=s.empty?"<p class='muted'>No purchase requests.</p>":s.docs.map(x=>{let p=x.data(),st=p.status||"Pending",ex=p.expiresAt?.toDate?.();if(st==="Active"&&ex&&ex<new Date())st="Expired";return `<div class="item"><b>${esc(p.product)}</b><p class="tiny">${esc(p.plan)} · ${money(p.amount)} · ${esc(st)}</p></div>`}).join("");$("wishlistGrid").innerHTML=products.filter(p=>wishlist.includes(p.id)).map(card).join("")||'<p class="muted">Wishlist empty.</p>'}catch(e){$("purchaseHistory").textContent=e.message}}
+async function adminLogin(){try{let r=await auth.signInWithEmailAndPassword($("adminEmail").value.trim(),$("adminPassword").value),d=await db.collection("admins").doc(r.user.uid).get();if(!d.exists||d.data().role!=="admin"){await auth.signOut();throw Error("Not an authorized admin.")}isAdmin=true;closeModal("adminLoginModal");go("admin");showAdmin()}catch(e){$("adminMessage").textContent=e.message}}
+async function checkAdmin(){if(!auth.currentUser)return false;let d=await db.collection("admins").doc(auth.currentUser.uid).get();return d.exists&&d.data().role==="admin"}
+async function showAdmin(){if(!customer){$("adminGate").textContent="Login with admin account.";return}isAdmin=await checkAdmin();$("adminGate").classList.toggle("hidden",isAdmin);$("adminArea").classList.toggle("hidden",!isAdmin);if(!isAdmin){$("adminGate").textContent="This account has no admin access.";return}renderAdminProducts();loadRequests();loadAnnouncements();loadVideos()}
+function renderAdminProducts(){$("adminProducts").innerHTML=products.map(p=>`<div class="item"><b>${esc(p.name)}</b><p class="tiny">${esc(p.category)} · ${money(p.price)}</p><button class="mini" onclick="editProduct('${p.id}')">Edit</button><button class="mini" onclick="deleteProduct('${p.id}')">Delete</button></div>`).join("")}
+function editProduct(id){let p=products.find(x=>x.id===id);$("productId").value=id;$("pName").value=p.name||"";$("pDescription").value=p.description||"";$("pCategory").value=p.category||"Digital Products";$("pWebsiteType").value=p.websiteType||"Other";$("pPrice").value=p.price||"";$("pImageUrl").value=p.image||"";$("pGallery").value=Array.isArray(p.gallery)?p.gallery.join(", "):p.gallery||"";$("pDownload").value=p.downloadUrl||"";$("pFeatured").value=String(!!p.featured);scrollTo(0,0)}
+async function upload(file,path){return new Promise((ok,no)=>{let ref=storage.ref().child(path),task=ref.put(file);task.on("state_changed",s=>$("uploadStatus").textContent="Uploading "+file.name+" · "+Math.round(s.bytesTransferred/s.totalBytes*100)+"%",no,async()=>{try{ok(await ref.getDownloadURL())}catch(e){no(e)}})})}
+async function saveProduct(){let b=$("saveBtn");if(b.disabled)return;b.disabled=true;try{if(!await checkAdmin())throw Error("Admin login required.");let name=$("pName").value.trim();if(!name)throw Error("Enter product name.");let id=$("productId").value,img=$("pImageFile").files[0],apk=$("pApk").files[0],d={name,description:$("pDescription").value,category:$("pCategory").value,websiteType:$("pWebsiteType").value,price:Number($("pPrice").value)||0,featured:$("pFeatured").value==="true",updatedAt:firebase.firestore.FieldValue.serverTimestamp()};if($("pImageUrl").value.trim())d.image=$("pImageUrl").value.trim();if(img){if(!img.type.startsWith("image/")||img.size>5*1024*1024)throw Error("Image must be under 5 MB.");d.image=await upload(img,"product-images/"+Date.now()+"_"+img.name.replace(/[^a-z0-9._-]/gi,"_"))}if($("pGallery").value.trim())d.gallery=$("pGallery").value.split(",").map(x=>x.trim()).filter(Boolean);if($("pDownload").value.trim())d.downloadUrl=$("pDownload").value.trim();if(apk){if(!apk.name.toLowerCase().endsWith(".apk")||apk.size>100*1024*1024)throw Error("APK must be valid and under 100 MB.");d.apkUrl=await upload(apk,"product-apks/"+Date.now()+"_"+apk.name.replace(/[^a-z0-9._-]/gi,"_"));d.apkName=apk.name}if(id)await db.collection("products").doc(id).update(d);else{d.createdAt=firebase.firestore.FieldValue.serverTimestamp();await db.collection("products").add(d)}$("uploadStatus").textContent="Saved.";clearForm();await loadProducts()}catch(e){$("uploadStatus").textContent="ERROR: "+(e.code||"")+" "+e.message;alert(e.message)}finally{b.disabled=false}}
+function clearForm(){["productId","pName","pDescription","pPrice","pImageUrl","pGallery","pDownload","pImageFile","pApk"].forEach(x=>$(x).value="");$("uploadStatus").textContent="Ready."}
+async function deleteProduct(id){if(!confirm("Delete product?")||!await checkAdmin())return;await db.collection("products").doc(id).delete();loadProducts()}
+async function loadRequests(){if(!isAdmin)return;try{let s=await db.collection("purchaseRequests").get();$("adminRequests").innerHTML=s.empty?"No requests.":s.docs.map(x=>{let p=x.data();return `<div class="item"><b>${esc(p.product)}</b><p class="tiny">${esc(p.email)} · ${esc(p.plan)} · ${money(p.amount)} · ${esc(p.status)}</p><button class="mini solid" onclick="activate('${x.id}')">Activate</button><button class="mini" onclick="deactivate('${x.id}')">Deactivate</button></div>`}).join("")}catch(e){$("adminRequests").textContent=e.message}}
+async function activate(id){let days=Number(prompt("Access duration in days:","30"));if(!Number.isInteger(days)||days<1||days>365)return alert("Enter 1–365 days.");if(!confirm("Confirm payment verified?"))return;try{if(!await checkAdmin())throw Error("Unauthorized");await db.collection("purchaseRequests").doc(id).update({status:"Active",durationDays:days,activatedAt:firebase.firestore.FieldValue.serverTimestamp(),expiresAt:firebase.firestore.Timestamp.fromDate(new Date(Date.now()+days*86400000))});loadRequests()}catch(e){alert(e.message)}}
+async function deactivate(id){if(!confirm("Deactivate?")||!await checkAdmin())return;await db.collection("purchaseRequests").doc(id).update({status:"Deactivated"});loadRequests()}
+async function addAnnouncement(){if(!await checkAdmin())return alert("Unauthorized");let title=$("aTitle").value.trim(),text=$("aText").value.trim();if(!title||!text)return alert("Enter title and message.");await db.collection("announcements").add({title,text,createdAt:firebase.firestore.FieldValue.serverTimestamp()});$("aTitle").value=$("aText").value="";loadAnnouncements()}
+async function loadAnnouncements(){try{let s=await db.collection("announcements").get(),a=s.docs.map(d=>({id:d.id,...d.data()}));$("announcements").innerHTML=a.slice(-3).reverse().map(x=>`<div class="panel"><span class="tag">CTS UPDATE</span><h3>${esc(x.title)}</h3><p class="muted">${esc(x.text)}</p></div>`).join("")||'<p class="muted">No announcements.</p>';$("adminAnnouncements").innerHTML=isAdmin?a.map(x=>`<div class="item">${esc(x.title)} <button class="mini" onclick="delAnnouncement('${x.id}')">Delete</button></div>`).join(""):""}catch(e){}}
+async function delAnnouncement(id){if(await checkAdmin()){await db.collection("announcements").doc(id).delete();loadAnnouncements()}}
+async function addVideo(){if(!await checkAdmin())return alert("Unauthorized");let title=$("vTitle").value.trim(),url=$("vUrl").value.trim();if(!title||!url)return alert("Enter title and URL.");await db.collection("videos").add({title,url,createdAt:firebase.firestore.FieldValue.serverTimestamp()});$("vTitle").value=$("vUrl").value="";loadVideos()}
+function ytId(u){let m=String(u).match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/))([\w-]{11})/);return m?m[1]:String(u).trim()}
+async function loadVideos(){try{let s=await db.collection("videos").get(),a=s.docs.map(d=>({id:d.id,...d.data()}));$("videoGrid").innerHTML=a.map(v=>`<div class="card"><div class="cover" style="height:150px"><iframe width="100%" height="100%" src="https://www.youtube-nocookie.com/embed/${esc(ytId(v.url))}" title="${esc(v.title)}" allowfullscreen></iframe></div><div class="body"><h3>${esc(v.title)}</h3></div></div>`).join("")||'<p class="muted">Videos coming soon.</p>';$("adminVideos").innerHTML=isAdmin?a.map(v=>`<div class="item">${esc(v.title)} <button class="mini" onclick="delVideo('${v.id}')">Delete</button></div>`).join(""):""}catch(e){}}
+async function delVideo(id){if(await checkAdmin()){await db.collection("videos").doc(id).delete();loadVideos()}}
+function countText(){let t=$("textTool").value;$("textCount").textContent=(t.trim()?t.trim().split(/\s+/).length:0)+" words · "+t.length+" characters"}
+function convertText(m){let t=$("textTool").value;if(m==="upper")t=t.toUpperCase();if(m==="lower")t=t.toLowerCase();if(m==="title")t=t.toLowerCase().replace(/\b\w/g,x=>x.toUpperCase());$("textTool").value=t;countText()}
+function copyVal(id){$(id).select();document.execCommand("copy")}
+function genPass(){let n=Math.max(8,Math.min(40,+$("passLength").value||16)),c="ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%&*",s="";for(let i=0;i<n;i++)s+=c[Math.floor(Math.random()*c.length)];$("passOut").value=s}
+function runCmd(){let c=$("cmd").value.trim().toLowerCase(),o=$("termOut"),m={help:"Commands: help, date, whoami, clear",date:new Date().toString(),whoami:"CTS demo visitor"};if(c==="clear")o.textContent="";else o.textContent+="\n> "+c+"\n"+(m[c]||"Command not found. Type help.");$("cmd").value=""}
+function checkQuiz(){$("quizResult").textContent=$("quiz").value==="yes"?"Correct! Use a long, unique password for every account.":"Try again."}
+async function loadProducts(){try{let s=await db.collection("products").get();products=s.docs.map(d=>({id:d.id,...d.data()})).filter(p=>p.active!==false).sort((a,b)=>(b.createdAt?.toMillis?.()||0)-(a.createdAt?.toMillis?.()||0));renderAll()}catch(e){$("storeGrid").textContent="Could not load products: "+e.message}}
+loadProducts();loadAnnouncements();loadVideos();
+</script></body></html>
