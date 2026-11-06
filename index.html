@@ -41,6 +41,97 @@ document.addEventListener('DOMContentLoaded',()=>{
 });
 </script>
 
+
+<style id="cts-ultra-cinematic">
+:root{--g:#7cffaa;--cyan:#63eaff;--violet:#b58cff;--gold:#ffe08a}
+body{background:#05080d;color:#f5fbff}
+body:after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(ellipse at 10% 10%,#123d4540,transparent 36%),radial-gradient(ellipse at 90% 25%,#38205b38,transparent 34%),radial-gradient(ellipse at 50% 100%,#12442b35,transparent 42%);animation:colorDrift 16s ease-in-out infinite alternate}
+@keyframes colorDrift{to{filter:hue-rotate(65deg);transform:scale(1.08)}}
+.page.active{animation:pageEnter .55s cubic-bezier(.2,.8,.2,1) both}
+@keyframes pageEnter{from{opacity:0;transform:translateY(16px) scale(.992);filter:blur(5px)}to{opacity:1;transform:none;filter:none}}
+header{background:#050a0de8;border-color:#28434b;box-shadow:0 8px 35px #0008}
+.logo{background:linear-gradient(90deg,#fff,#7cffaa,#63eaff,#c9a4ff,#fff);background-size:300%;color:transparent!important;background-clip:text;-webkit-background-clip:text;animation:brandFlow 7s linear infinite}
+.logo small{color:#b9d9d5!important}
+@keyframes brandFlow{to{background-position:300%}}
+.heroArt{height:430px;border-radius:24px;border:1px solid #6be8c655;background:#03080d;box-shadow:0 25px 90px #000a,inset 0 0 80px #36e7b51a;overflow:hidden}
+.heroArt video,.cinema-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.43;filter:saturate(1.35) contrast(1.12);mix-blend-mode:screen}
+.heroArt:after{content:"";position:absolute;inset:0;background:linear-gradient(120deg,#03080d99,#071b1480 45%,#140b2790);pointer-events:none;z-index:1}
+.heroArt:before{z-index:2;pointer-events:none}
+.mark{z-index:3!important;font-size:clamp(76px,12vw,132px)!important;background:linear-gradient(110deg,#fff,#8bffc1,#6ceaff,#d5a6ff,#fff);background-size:300%;color:transparent!important;background-clip:text;-webkit-background-clip:text;animation:brandFlow 5s linear infinite,markPulse 3s ease-in-out infinite!important;text-shadow:none!important;filter:drop-shadow(0 0 24px #65ffc8aa)}
+@keyframes markPulse{50%{transform:translate(-50%,-50%) scale(1.09);filter:drop-shadow(0 0 38px #65ffc8)}}
+.float{z-index:4!important;border-color:#7debd76b!important;background:#071319bb!important;backdrop-filter:blur(16px);box-shadow:0 12px 40px #0009,0 0 25px #49f0c51c!important}
+.quick div,.card,.panel{position:relative;isolation:isolate;transition:transform .35s,border-color .35s,box-shadow .35s;overflow:hidden}
+.quick div:before,.card:before,.panel:before{content:"";position:absolute;inset:-1px;z-index:-1;opacity:0;background:linear-gradient(120deg,transparent,#73ff9b22,#63eaff28,transparent);transform:translateX(-100%);transition:transform .8s,opacity .3s}
+.quick div:hover:before,.card:hover:before,.panel:hover:before{opacity:1;transform:translateX(100%)}
+.quick div:hover,.card:hover,.panel:hover{transform:translateY(-7px);border-color:#70ffd0;box-shadow:0 18px 45px #0008,0 0 25px #51eac51c}
+.cover{position:relative;background:linear-gradient(130deg,#0c2024,#16223c,#1b1231);background-size:220% 220%;animation:coverShift 9s ease infinite}
+@keyframes coverShift{50%{background-position:100% 100%}}
+.cover:after{content:"CTS / DIGITAL SHOWCASE";position:absolute;bottom:10px;left:12px;font-size:8px;letter-spacing:2px;color:#e6fff5;text-shadow:0 2px 10px #000;opacity:.7}
+.cover img{transition:transform .8s,filter .8s}.card:hover .cover img{transform:scale(1.08);filter:saturate(1.3)}
+.btn,.cta{box-shadow:0 0 0 0 #7cffaa55;transition:transform .2s,box-shadow .3s}.btn:hover,.cta:hover{transform:translateY(-3px);box-shadow:0 0 0 7px #7cffaa15,0 8px 30px #7cffaa35}
+.cinema-stage{position:relative;min-height:240px;margin:26px 0 34px;border:1px solid #5debd34d;border-radius:22px;overflow:hidden;background:#050b10;box-shadow:0 25px 80px #0008}
+.cinema-stage video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.58}
+.cinema-stage:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#050b10e8,#071a18a6 55%,#050b1080)}
+.cinema-copy{position:relative;z-index:2;padding:30px;max-width:620px}.cinema-copy h2{font-size:clamp(26px,5vw,45px);margin:8px 0;background:linear-gradient(90deg,#fff,#7cffaa,#63eaff);color:transparent;background-clip:text;-webkit-background-clip:text}
+.cinema-controls{position:absolute;z-index:3;right:16px;bottom:16px;display:flex;gap:8px}.cinema-controls button{border:1px solid #8bf5d877;background:#071319bb;color:#dffff4;padding:9px 12px;border-radius:30px;backdrop-filter:blur(12px)}
+.scanline{position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(transparent 49%,#ffffff0a 50%,transparent 51%);background-size:100% 6px;opacity:.25}
+.reveal{opacity:0;transform:translateY(28px);transition:opacity .8s,transform .8s}.reveal.seen{opacity:1;transform:none}
+@media(max-width:700px){.heroArt{height:310px}.cinema-stage{min-height:280px}.cinema-copy{padding:22px}.float{transform:scale(.85)}.f2{right:1%}.f3{left:5%}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
+</style>
+<script>
+/* CTS navigation: keep Android/browser Back inside the website */
+(function(){
+ const originalGo=window.go;
+ let current='home',historyReady=false;
+ function showPage(id,fromPop){
+   if(!document.getElementById(id))id='home';
+   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+   document.getElementById(id).classList.add('active');
+   document.querySelectorAll('[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===id));
+   const nav=document.getElementById('nav');if(nav)nav.classList.remove('open');
+   current=id;window.scrollTo({top:0,behavior:'instant'});
+   if(id==='profile'&&typeof openProfile==='function')openProfile();
+   if(id==='admin'&&typeof showAdmin==='function')showAdmin();
+   if(!fromPop){history.pushState({ctsPage:id},'', '#'+id);}
+   setTimeout(observeReveals,80);
+ }
+ window.go=function(id){showPage(id,false)};
+ window.addEventListener('popstate',function(e){
+   const id=(e.state&&e.state.ctsPage)||(location.hash||'').slice(1)||'home';
+   showPage(id,true);
+   /* Keep one CTS state on the stack so another Back doesn't leave the app unexpectedly. */
+   if(!e.state||!e.state.ctsPage)history.pushState({ctsPage:id},'', '#'+id);
+ });
+ if(!history.state||!history.state.ctsPage)history.replaceState({ctsPage:'home'},'','#home');
+ historyReady=true;
+})();
+function observeReveals(){
+ const nodes=document.querySelectorAll('.page.active .section,.page.active .card,.page.active .quick>div,.page.active .panel,.page.active .banner');
+ if(!('IntersectionObserver'in window)){nodes.forEach(n=>n.classList.add('seen'));return}
+ const io=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('seen');io.unobserve(e.target)}}),{threshold:.08});nodes.forEach(n=>{n.classList.add('reveal');io.observe(n)});
+}
+function addCinemaStages(){
+ const videoURL='https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4';
+ const configs=[
+  ['websites','WEB STUDIO / IMMERSIVE SHOWCASE','Your next website should feel unforgettable.','Explore cinematic layouts, custom builds and digital experiences.'],
+  ['store','DIGITAL STORE / LIVE COLLECTION','Discover the digital side of CTS.','Explore products and creator resources in one premium marketplace.']
+ ];
+ configs.forEach(([id,kicker,title,desc])=>{
+  const page=document.getElementById(id);if(!page||page.querySelector('.cinema-stage'))return;
+  const stage=document.createElement('div');stage.className='cinema-stage';
+  stage.innerHTML=`<video class="cinema-video" muted loop playsinline preload="metadata" poster=""><source src="${videoURL}" type="video/mp4"></video><div class="scanline"></div><div class="cinema-copy"><div class="eyebrow">${kicker}</div><h2>${title}</h2><p class="muted">${desc}</p><span class="tag">CYBER TECHEY STROM · MOTION EXPERIENCE</span></div><div class="cinema-controls"><button type="button" class="cinema-toggle">Ⅱ Pause</button><button type="button" class="cinema-sound">Sound off</button></div>`;
+  const first=page.querySelector('h1');if(first&&first.parentElement)first.parentElement.insertAdjacentElement('afterend',stage);else page.prepend(stage);
+  const v=stage.querySelector('video'),toggle=stage.querySelector('.cinema-toggle'),sound=stage.querySelector('.cinema-sound');
+  const play=()=>v.play().then(()=>toggle.textContent='Ⅱ Pause').catch(()=>toggle.textContent='▶ Play');
+  toggle.addEventListener('click',()=>{if(v.paused)play();else{v.pause();toggle.textContent='▶ Play'}});
+  sound.addEventListener('click',()=>{v.muted=!v.muted;sound.textContent=v.muted?'Sound off':'Mute';if(!v.muted)play()});
+  const vis=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)play();else v.pause()}),{threshold:.15});vis.observe(stage);
+ });
+}
+document.addEventListener('DOMContentLoaded',()=>{addCinemaStages();observeReveals();document.querySelectorAll('.heroArt').forEach(a=>{if(a.querySelector('video'))return;const v=document.createElement('video');v.src='https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4';v.autoplay=true;v.muted=true;v.loop=true;v.playsInline=true;v.setAttribute('aria-hidden','true');a.prepend(v);});});
+</script>
+
 </head><body>
 <header><a class="logo" href="#" onclick="go('home');return false">CTS<i>.</i>TOOL<small>CYBER TECHEY STROM</small></a><nav id="nav"><button class="active" data-page="home">Home</button><button data-page="store">Store</button><button data-page="websites">Websites</button><button data-page="apps">Apps</button><button data-page="creator">Creator</button><button data-page="tools">Tools</button><button data-page="videos">Videos</button><button data-page="community">Community</button></nav><div><button class="pill" onclick="go('profile')">Account</button><button class="pill solid" id="loginTop" onclick="openModal('authModal')">Login</button><button class="pill hidden" id="logoutTop" onclick="customerLogout()">Logout</button><button class="pill menu" onclick="$('nav').classList.toggle('open')">☰</button></div></header>
 <main>
