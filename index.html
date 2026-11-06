@@ -1,13 +1,16 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>CTS MOD</title>
+
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-storage-compat.js"></script>
+
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#070c09;color:#f3fff6;font-family:Arial,sans-serif}
@@ -36,7 +39,7 @@ textarea{min-height:85px}
 .card img{width:100%;height:165px;object-fit:cover;background:#17251b}
 .info{padding:14px}
 .info h3{margin:5px 0 9px}
-.small{font-size:13px;color:#9fb5a5;line-height:1.5}
+.small{font-size:13px;color:#9fb5a5;line-height:1.5;overflow-wrap:anywhere}
 .price{font-size:17px;color:#35f477;font-weight:bold;margin:13px 0;line-height:1.6}
 .section-title{margin-top:25px}
 .hidden{display:none!important}
@@ -49,7 +52,8 @@ textarea{min-height:85px}
 .item button,.item a{margin:5px 5px 0 0}
 footer{text-align:center;color:#819889;padding:30px}
 hr{border-color:#294632;margin:20px 0}
-label{font-size:14px;color:#c7d9cc}
+label{font-size:14px;color:#c7d9cc;display:block;margin-top:8px}
+#uploadStatus{padding:10px;border-radius:8px;background:#17251b;overflow-wrap:anywhere}
 @media(max-width:600px){
 header{padding:11px 3%}
 .logo{font-size:20px}
@@ -63,6 +67,7 @@ header{padding:11px 3%}
 }
 </style>
 </head>
+
 <body>
 
 <header>
@@ -177,7 +182,9 @@ header{padding:11px 3%}
 
 <label>APK File (Optional)</label>
 <input id="pApk" type="file" accept=".apk,application/vnd.android.package-archive">
+
 <p class="small" id="currentApkInfo">No APK selected for this product.</p>
+<p class="small" id="uploadStatus">Ready to upload.</p>
 
 <h3>Pricing (₹)</h3>
 <div class="row">
@@ -189,7 +196,7 @@ header{padding:11px 3%}
 <input id="pCustom" type="number" min="0" placeholder="Custom Price">
 </div>
 
-<button class="btn" onclick="saveProduct()">Save Product</button>
+<button class="btn" id="saveProductButton" onclick="saveProduct()">Save Product</button>
 <button class="btn dark" onclick="clearForm()">Clear Form</button>
 
 <hr>
@@ -216,18 +223,18 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
-const auth=firebase.auth();
-const db=firebase.firestore();
-const storage=firebase.storage();
-const WHATSAPP="918976034412";
+const auth = firebase.auth();
+const db = firebase.firestore();
+const storage = firebase.storage();
+const WHATSAPP = "918976034412";
 
-let customer=null;
-let isCurrentAdmin=false;
-let allProducts=[];
-let currentCategory="termux";
-let renderVersion=0;
+let customer = null;
+let isCurrentAdmin = false;
+let allProducts = [];
+let currentCategory = "termux";
+let renderVersion = 0;
 
-const categoryNames={
+const categoryNames = {
  termux:"Termux Commands",
  products:"My Products",
  freefire:"Free Fire Resources"
@@ -236,9 +243,11 @@ const categoryNames={
 function openModal(id){
  document.getElementById(id).classList.remove("hidden");
 }
+
 function closeModal(id){
  document.getElementById(id).classList.add("hidden");
 }
+
 function outsideClose(e,id){
  if(e.target.id===id)closeModal(id);
 }
@@ -318,9 +327,6 @@ auth.onAuthStateChanged(async user=>{
   try{
    const adminDoc=await db.collection("admins").doc(user.uid).get();
    isCurrentAdmin=adminDoc.exists && adminDoc.data().role==="admin";
-   if(isCurrentAdmin && !document.getElementById("adminModal").classList.contains("hidden")){
-    await loadAdminProducts();
-   }
   }catch(e){console.error("Admin check:",e);}
  }
  renderProducts();
@@ -597,19 +603,74 @@ async function contactWhatsApp(product){
  }
 }
 
+/* APK FILE SELECT */
+document.getElementById("pApk").addEventListener("change",function(){
+ const file=this.files[0];
+ document.getElementById("currentApkInfo").textContent=
+  file ? "Selected APK: "+file.name+" ("+(file.size/1024/1024).toFixed(2)+" MB)" :
+  "No new APK selected. Existing APK will be kept when editing.";
+});
+
+/* IMAGE FILE SELECT */
+document.getElementById("pImage").addEventListener("change",function(){
+ const file=this.files[0];
+ if(file)document.getElementById("uploadStatus").textContent=
+  "Image selected: "+file.name;
+});
+
+/* FIREBASE UPLOAD WITH PROGRESS */
+function uploadFileWithProgress(file,path,contentType){
+ return new Promise((resolve,reject)=>{
+  const ref=storage.ref().child(path);
+  const task=ref.put(file,{
+   contentType:contentType
+  });
+
+  task.on("state_changed",
+   snapshot=>{
+    const percent=snapshot.totalBytes
+     ? Math.round(snapshot.bytesTransferred/snapshot.totalBytes*100)
+     : 0;
+
+    document.getElementById("uploadStatus").textContent=
+     "Uploading "+file.name+": "+percent+"%";
+   },
+   error=>reject(error),
+   async()=>{
+    try{
+     const url=await ref.getDownloadURL();
+     resolve(url);
+    }catch(error){
+     reject(error);
+    }
+   }
+  );
+ });
+}
+
+/* SAVE PRODUCT */
 async function saveProduct(){
+ const btn=document.getElementById("saveProductButton");
+ const status=document.getElementById("uploadStatus");
+
+ if(btn.disabled)return;
+
  try{
-  if(!await checkAdmin())return alert("Admin login required.");
+  btn.disabled=true;
+  status.textContent="Checking admin access...";
+
+  if(!await checkAdmin())
+   throw new Error("Admin login required.");
 
   const name=document.getElementById("pName").value.trim();
-  if(!name)return alert("Enter product name.");
+  if(!name)throw new Error("Enter product name.");
 
   const id=document.getElementById("productId").value;
   const imageFile=document.getElementById("pImage").files[0];
   const apkFile=document.getElementById("pApk").files[0];
 
   const data={
-   name,
+   name:name,
    description:document.getElementById("pDescription").value,
    category:document.getElementById("pCategory").value,
    day:Number(document.getElementById("pDay").value)||0,
@@ -620,12 +681,21 @@ async function saveProduct(){
   };
 
   if(imageFile){
-   if(imageFile.size>5*1024*1024)throw new Error("Image must be under 5 MB.");
-   if(!imageFile.type.startsWith("image/"))throw new Error("Select an image file.");
+   if(imageFile.size>5*1024*1024)
+    throw new Error("Image must be under 5 MB.");
 
-   const imageRef=storage.ref("product-images/"+Date.now()+"_"+imageFile.name);
-   await imageRef.put(imageFile);
-   data.image=await imageRef.getDownloadURL();
+   if(!imageFile.type.startsWith("image/"))
+    throw new Error("Select a valid image file.");
+
+   const safeImageName=imageFile.name.replace(/[^a-zA-Z0-9._-]/g,"_");
+
+   status.textContent="Starting image upload...";
+
+   data.image=await uploadFileWithProgress(
+    imageFile,
+    "product-images/"+Date.now()+"_"+safeImageName,
+    imageFile.type
+   );
   }
 
   if(apkFile){
@@ -635,16 +705,23 @@ async function saveProduct(){
    if(apkFile.size>100*1024*1024)
     throw new Error("APK must be under 100 MB.");
 
+   if(apkFile.size===0)
+    throw new Error("Selected APK is empty.");
+
    const safeName=apkFile.name.replace(/[^a-zA-Z0-9._-]/g,"_");
-   const apkRef=storage.ref("product-apks/"+Date.now()+"_"+safeName);
 
-   await apkRef.put(apkFile,{
-    contentType:"application/vnd.android.package-archive"
-   });
+   status.textContent="Starting APK upload...";
 
-   data.apkUrl=await apkRef.getDownloadURL();
+   data.apkUrl=await uploadFileWithProgress(
+    apkFile,
+    "product-apks/"+Date.now()+"_"+safeName,
+    "application/vnd.android.package-archive"
+   );
+
    data.apkName=safeName;
   }
+
+  status.textContent="Saving product information...";
 
   if(id){
    await db.collection("products").doc(id).update(data);
@@ -653,23 +730,47 @@ async function saveProduct(){
    await db.collection("products").add(data);
   }
 
-  alert("Product saved!");
+  status.textContent="Product saved successfully!";
+  alert("Product saved successfully!");
+
   clearForm();
   await loadProducts();
 
- }catch(e){alert(e.message);}
+ }catch(e){
+  console.error("CTS PRODUCT UPLOAD ERROR:",e);
+
+  const errorCode=e.code||"unknown-error";
+  status.textContent="ERROR: "+errorCode+" — "+e.message;
+
+  alert(
+   "Product upload/save failed.\n\n"+
+   "Error: "+errorCode+"\n"+
+   "Message: "+e.message
+  );
+ }finally{
+  btn.disabled=false;
+ }
 }
 
 function clearForm(){
- ["productId","pName","pDescription","pDay","pWeek","pMonth","pCustom","pImage","pApk"]
- .forEach(id=>document.getElementById(id).value="");
+ [
+  "productId","pName","pDescription","pDay","pWeek",
+  "pMonth","pCustom","pImage","pApk"
+ ].forEach(id=>{
+  document.getElementById(id).value="";
+ });
 
- document.getElementById("currentApkInfo").textContent="No APK selected for this product.";
+ document.getElementById("currentApkInfo").textContent=
+  "No APK selected for this product.";
+
+ document.getElementById("uploadStatus").textContent=
+  "Ready to upload.";
 }
 
 function loadAdminProducts(){
  const box=document.getElementById("adminProducts");
  if(!box)return;
+
  box.innerHTML="";
 
  allProducts.forEach(p=>{
@@ -681,7 +782,9 @@ function loadAdminProducts(){
 
   const apk=document.createElement("p");
   apk.className="small";
-  apk.textContent=p.apkUrl?"APK attached: "+(p.apkName||"Yes"):"No APK attached";
+  apk.textContent=p.apkUrl
+   ?"APK attached: "+(p.apkName||"Yes")
+   :"No APK attached";
 
   const edit=document.createElement("button");
   edit.className="btn";
@@ -711,9 +814,16 @@ function editProduct(p){
  document.getElementById("pApk").value="";
 
  document.getElementById("currentApkInfo").textContent=
-  p.apkUrl?"Current APK: "+(p.apkName||"Uploaded")+" (select a new APK to replace it)":"No APK currently attached.";
+  p.apkUrl
+  ?"Current APK: "+(p.apkName||"Uploaded")+" (select a new APK to replace it)"
+  :"No APK currently attached.";
 
- document.querySelector("#adminModal .modal-box").scrollTo({top:0,behavior:"smooth"});
+ document.getElementById("uploadStatus").textContent=
+  "Ready to edit product.";
+
+ document.querySelector("#adminModal .modal-box").scrollTo({
+  top:0,behavior:"smooth"
+ });
 }
 
 async function deleteProduct(id){
@@ -721,18 +831,21 @@ async function deleteProduct(id){
 
  try{
   if(!await checkAdmin())return alert("Unauthorized.");
+
   await db.collection("products").doc(id).delete();
   await loadProducts();
+  alert("Product deleted.");
  }catch(e){alert(e.message);}
 }
 
-// ADMIN PURCHASE REQUESTS
+/* ADMIN PURCHASE REQUESTS */
 async function loadPurchaseRequests(){
  const box=document.getElementById("adminRequests");
  box.textContent="Loading requests...";
 
  try{
-  if(!await checkAdmin())throw new Error("Admin access required.");
+  if(!await checkAdmin())
+   throw new Error("Admin access required.");
 
   const snap=await db.collection("purchaseRequests").get();
   box.innerHTML="";
@@ -776,7 +889,11 @@ async function loadPurchaseRequests(){
    row.append(title,info,status,activate,deactivate);
    box.append(row);
   });
- }catch(e){box.textContent=e.message;}
+ }catch(e){
+  box.textContent=e.code
+   ?e.code+" — "+e.message
+   :e.message;
+ }
 }
 
 async function activateRequest(id){
@@ -789,7 +906,8 @@ async function activateRequest(id){
   return;
  }
 
- if(!confirm("Confirm payment has been checked and activate for "+number+" days?"))return;
+ if(!confirm("Confirm payment has been checked and activate for "+number+" days?"))
+  return;
 
  try{
   if(!await checkAdmin())throw new Error("Unauthorized.");
@@ -825,7 +943,9 @@ async function deactivateRequest(id){
  }catch(e){alert(e.message);}
 }
 
+/* INITIAL LOAD */
 loadProducts();
+
 </script>
 </body>
- </html>
+</html>
